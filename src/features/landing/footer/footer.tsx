@@ -1,5 +1,4 @@
 'use client';
-import { Button } from '@/components/ui/button';
 import { ArrowUp } from 'lucide-react';
 
 export default function Footer() {
@@ -11,72 +10,92 @@ export default function Footer() {
   };
 
   return (
-    <footer className="relative w-full bg-[#00FFBC] text-black pt-0 ">
-      {/* Top black strip */}
+    <footer className="relative w-full bg-[#00FFBC] text-black">
       <div className="max-w-7xl mx-auto">
-        <h3 className="text-5xl font-extrabold pt-8">techorphic</h3>
-        <div className="container mx-auto px-4 py-6 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 relative">
-          {/* Company Info */}
-          <div className="col-span-1 md:col-span-2 lg:col-span-2 flex flex-col">
-            <p className="text-lg leading-relaxed max-w-[280px]">
-              At Techorphic, an experienced IT software development company, we help businesses like
-              yours figure out what&apos;s next, whether you&apos;re launching something new or just
-              need a second opinion.
-            </p>
+        {/* Company Name */}
+        <div className="px-4 sm:px-6 lg:px-8">
+          <h3 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold pt-6 sm:pt-8 lg:pt-10">
+            techorphic
+          </h3>
+        </div>
+
+        {/* Main Content Grid */}
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10 relative">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 lg:gap-10">
+            {/* Company Info */}
+            <div className="col-span-1 sm:col-span-2 lg:col-span-2 flex flex-col">
+              <p className="text-sm sm:text-base lg:text-lg leading-relaxed max-w-full sm:max-w-md lg:max-w-lg pr-0 sm:pr-4 lg:pr-8">
+                At Techorphic, an experienced IT software development company, we help businesses
+                like yours figure out what&apos;s next, whether you&apos;re launching something new
+                or just need a second opinion.
+              </p>
+            </div>
+
+            {/* Contact Info */}
+            <div className="col-span-1 flex flex-col space-y-3 sm:space-y-4 text-sm sm:text-base order-2 sm:order-none">
+              <div className="space-y-2 sm:space-y-3">
+                <p className="font-medium">Sabzazar Scheme, Lahore</p>
+                <p>
+                  <a
+                    href="mailto:info@techorphic.com"
+                    className="hover:underline transition-all duration-200 hover:text-gray-700"
+                  >
+                    info@techorphic.com
+                  </a>
+                </p>
+                <p>
+                  <a
+                    href="tel:+923086232070"
+                    className="hover:underline transition-all duration-200 hover:text-gray-700"
+                  >
+                    +92 308 6232 070
+                  </a>
+                </p>
+              </div>
+
+              <button className="bg-black text-white px-4 sm:px-6 py-2 sm:py-3 rounded-md text-sm sm:text-base font-semibold shadow-lg hover:bg-gray-800 transition-colors duration-200 w-fit mt-4 sm:mt-6">
+                LET&apos;S DISCUSS
+              </button>
+            </div>
+
+            {/* Social Media Links */}
+            <div className="col-span-1 flex flex-col space-y-3 sm:space-y-4 order-1 sm:order-none">
+              <div className="flex flex-row sm:flex-col space-x-3 sm:space-x-0 sm:space-y-3 lg:space-y-4">
+                <button className="bg-black text-[#22CDA0] flex-1 sm:flex-none sm:w-32 lg:w-36 py-2 sm:py-3 rounded-md text-sm sm:text-base font-semibold shadow-lg hover:bg-gray-800 transition-colors duration-200">
+                  Instagram
+                </button>
+                <button className="bg-black text-[#22CDA0] flex-1 sm:flex-none sm:w-32 lg:w-36 py-2 sm:py-3 rounded-md text-sm sm:text-base font-semibold shadow-lg hover:bg-gray-800 transition-colors duration-200">
+                  Facebook
+                </button>
+                <button className="bg-black text-[#22CDA0] flex-1 sm:flex-none sm:w-32 lg:w-36 py-2 sm:py-3 rounded-md text-sm sm:text-base font-semibold shadow-lg hover:bg-gray-800 transition-colors duration-200">
+                  LinkedIn
+                </button>
+              </div>
+            </div>
           </div>
 
-          {/* Contact Info */}
-          <div className="col-span-1 flex flex-col space-y-4 text-base">
-            {' '}
-            {/* Changed text-lg to text-base */}
-            <p>Sabzazar Scheme, Lahore</p>
-            <p>
-              <a href="mailto:info@techorphic.com" className="hover:underline">
-                info@techorphic.com
-              </a>
-            </p>
-            <p>
-              <a href="tel:+923086232070" className="hover:underline">
-                +92 308 6232 070
-              </a>
-            </p>
-            <Button className="bg-black text-white px-6 py-3 rounded-md text-base font-semibold shadow-lg hover:bg-gray-800 w-fit">
-              LET&apos;S DISCUSS
-            </Button>
-          </div>
-
-          {/* Social Media Links */}
-          <div className="col-span-1 flex flex-col space-y-4 md:items-end m">
-            {' '}
-            {/* Removed lg:items-start */}
-            <Button className="bg-black text-[#22CDA0] w-[8rem] py-3 rounded-md text-base font-semibold shadow-lg hover:bg-gray-800">
-              instagram
-            </Button>
-            <Button className="bg-black text-[#22CDA0] w-[8rem] py-3 rounded-md text-base font-semibold shadow-lg hover:bg-gray-800">
-              Facebook
-            </Button>
-            <Button className="bg-black text-[#22CDA0] w-[8rem] py-3 rounded-md text-base font-semibold shadow-lg hover:bg-gray-800">
-              Linkedin
-            </Button>
-          </div>
-
-          {/* To Top Button */}
+          {/* To Top Button - Responsive positioning */}
           <button
             onClick={scrollToTop}
-            className="absolute right-4 md:bottom-10 lg:-bottom-20 bg-black text-white w-7 h-22 rounded-2xl flex flex-col items-center justify-center text-xs uppercase font-semibold shadow-lg hover:bg-gray-800 transition-colors duration-200"
+            className="absolute right-4 sm:right-6 lg:right-8 bottom-4 sm:bottom-6 lg:bottom-8 xl:-bottom-16 bg-black text-white w-6 sm:w-7 lg:w-8 h-16 sm:h-20 lg:h-24 rounded-xl sm:rounded-2xl flex flex-col items-center justify-center text-xs sm:text-sm uppercase font-semibold shadow-lg hover:bg-gray-800 transition-colors duration-200"
             aria-label="Scroll to top"
           >
-            <ArrowUp className="w-4 h-4 mb-1" />
-            <span style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}>
+            <ArrowUp className="w-3 h-3 sm:w-4 sm:h-4 mb-1" />
+            <span
+              className="text-xs sm:text-sm"
+              style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
+            >
               TO TOP
-            </span>{' '}
-            {/* Vertical text */}
+            </span>
           </button>
         </div>
 
         {/* Copyright Section */}
-        <div className="px-4 py-8 border-t-2 border-black w-[92%] text-lg mt-20">
-          <p>All Rights Reserved | Techorphic</p>
+        <div className="px-4 sm:px-6 lg:px-8 py-6 sm:py-8 border-t-2 border-black mx-4 sm:mx-6 lg:mx-8 text-sm sm:text-base lg:text-lg mt-12 sm:mt-16 lg:mt-20">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-2 sm:space-y-0">
+            <p className="font-medium">All Rights Reserved | Techorphic</p>
+            <p className="text-xs sm:text-sm text-gray-700">© 2024 Techorphic Developers</p>
+          </div>
         </div>
       </div>
     </footer>

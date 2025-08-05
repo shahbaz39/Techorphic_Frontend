@@ -11,9 +11,8 @@ const HeroSection = () => {
           {/* Left Column - Main Heading */}
           <div className="w-[50%]">
             <h1
-              className="font-normal leading-[80px] tracking-[-0.017em] text-[#020209]"
+              className="font-normal leading-[80px] md:text-[68px] text-[40px] hidden md:block tracking-[-0.017em] text-[#020209]"
               style={{
-                fontSize: '68px',
                 fontFamily: 'Overcame Demo, system-ui, -apple-system, sans-serif',
                 textShadow: '4px 4px 4px rgba(0, 0, 0, 0.25)',
                 verticalAlign: 'middle',
@@ -31,13 +30,24 @@ const HeroSection = () => {
             </h1>
           </div>
 
+          <p
+            className="block md:hidden text-5xl"
+            style={{
+              fontFamily: 'Overcame Demo, system-ui, -apple-system, sans-serif',
+              textShadow: '4px 4px 4px rgba(0, 0, 0, 0.25)',
+              verticalAlign: 'middle',
+            }}
+          >
+            {' '}
+            BUILDING SOFTWARE THAT FITS YOUR BUSINESS GOALS
+          </p>
+
           {/* Right Column - Description */}
-          <div className="flex items-end justify-end transform -translate-y-13">
-            <div className="w-[35%]">
+          <div className="flex items-end md:justify-end transform md:-translate-y-13">
+            <div className="md:w-[35%]">
               <p
-                className="font-normal leading-[110%] tracking-[-0.017em] text-[#030208] text-right"
+                className="font-normal leading-[110%] md:text-[40px] text-[30px] mt-3.5 md:mt-0  tracking-[-0.017em] text-[#030208] md:text-right"
                 style={{
-                  fontSize: '40px',
                   fontFamily: 'Montserrat, system-ui, -apple-system, sans-serif',
                   verticalAlign: 'middle',
                 }}
@@ -50,7 +60,7 @@ const HeroSection = () => {
         </div>
 
         {/* Technology Icons */}
-        <div className="mb-16 w-[50%]">
+        <div className="mb-16 md:w-[50%] mt-10 md:mt-0">
           <div className="grid grid-cols-8">
             {/* Laravel */}
             <div className="flex items-center justify-center">
@@ -128,13 +138,13 @@ const HeroSection = () => {
         {/* Bottom Content */}
         <div className="space-y-12">
           {/* Quote */}
-          <p className="font-[300] text-[36px] leading-[110%] tracking-[-1.7%]">
+          <p className="font-[300] md:text-[36px] text-[30px] leading-[110%] tracking-[-1.7%]">
             Your users deserve more than just functional technology, <br /> they deserve an
             exceptional experience.
           </p>
 
           {/* Description */}
-          <p className="font-[300] text-[36px] leading-[110%] tracking-[-1.7%] max-w-5xl">
+          <p className="font-[300]  md:text-[36px] text-[30px] leading-[110%] tracking-[-1.7%] max-w-5xl">
             Techorphic’s software development services deliver scalable, intuitive solutions like
             apps processing over 1M payments monthly and tools speeding up healthcare signups by
             40%. We&#39;re your success partner.

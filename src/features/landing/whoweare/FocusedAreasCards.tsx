@@ -130,7 +130,7 @@ export default function FocusedAreasCards() {
       {/* Fixed: Added proper padding to prevent cards from being cut off */}
       <div className="flex justify-center items-center px-4 md:px-8 lg:px-16">
         <motion.div
-          className="flex items-center justify-center relative"
+          className="flex md:flex-row flex-col items-center justify-center relative"
           style={{
             perspective: '1500px',
             // Fixed: Added extra width to accommodate hover transformations

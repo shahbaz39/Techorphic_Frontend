@@ -1,114 +1,172 @@
-import React from 'react';
+'use client';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import LETSDISCUSS from '@/icons/LET’SDISCUSS';
 
 const Navbar = () => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
   return (
-    <nav className="w-full px-10 py-6">
+    <nav className="w-full px-4 sm:px-6 lg:px-10 py-4 sm:py-6">
       <div className="max-w-8xl mx-auto flex items-center justify-between">
         {/* Logo */}
-        <div className="flex items-center">
+        <div className="flex items-center flex-shrink-0">
           <Link
             href="/"
             className="text-2xl font-bold text-gray-800 hover:text-gray-600 transition-colors"
           >
-            <Image src="/logo.svg" alt="Techorphic Logo" width={260} height={60} />
+            <Image
+              src="/logo.svg"
+              alt="Techorphic Logo"
+              width={200}
+              height={45}
+              className="w-auto h-8 sm:h-10 lg:h-12"
+            />
           </Link>
         </div>
 
-        {/* Navigation Links */}
-        <div className="hidden md:flex items-center space-x-6 text-[15px]">
+        {/* Desktop Navigation Links */}
+        <div className="hidden lg:flex items-center space-x-4 xl:space-x-6 text-[14px] xl:text-[15px]">
           <Link
             href="/"
-            className="text-[#323232]  hover:text-gray-900 font-[700] transition-colors"
+            className="text-[#323232] hover:text-gray-900 font-[700] transition-colors whitespace-nowrap"
           >
             Home
           </Link>
           <Link
             href="/about"
-            className="text-[#323232]  hover:text-gray-900 font-[700] transition-colors"
+            className="text-[#323232] hover:text-gray-900 font-[700] transition-colors whitespace-nowrap"
           >
             About
           </Link>
           <Link
             href="/software-development"
-            className="text-[#323232]  hover:text-gray-900 font-[700] transition-colors"
+            className="text-[#323232] hover:text-gray-900 font-[700] transition-colors whitespace-nowrap"
           >
             Software Development
           </Link>
           <Link
             href="/mobile-app-development"
-            className="text-[#323232]  hover:text-gray-900 font-[700] transition-colors"
+            className="text-[#323232] hover:text-gray-900 font-[700] transition-colors whitespace-nowrap"
           >
             Mobile App Development
           </Link>
           <Link
             href="/ui-ux-design"
-            className="text-[#323232]  hover:text-gray-900 font-[700] transition-colors"
+            className="text-[#323232] hover:text-gray-900 font-[700] transition-colors whitespace-nowrap"
           >
             UI/UX Design
           </Link>
           <Link
             href="/case-study"
-            className="text-[#323232]  hover:text-gray-900 font-[700] transition-colors"
+            className="text-[#323232] hover:text-gray-900 font-[700] transition-colors whitespace-nowrap"
           >
             Case Study
           </Link>
         </div>
 
-        {/* CTA Button */}
-        <div className="hidden md:block">
+        {/* Desktop CTA Button */}
+        <div className="hidden lg:block flex-shrink-0">
           <Link href="/contact">
             <LETSDISCUSS />
           </Link>
         </div>
 
         {/* Mobile Menu Button */}
-        <div className="md:hidden">
-          <button className="text-[#323232]  hover:text-gray-900 focus[700]ne-none">
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            </svg>
+        <div className="lg:hidden">
+          <button
+            onClick={toggleMobileMenu}
+            className="text-[#323232] hover:text-gray-900 focus:outline-none focus:text-gray-900 p-2"
+            aria-label="Toggle mobile menu"
+          >
+            {isMobileMenuOpen ? (
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            ) : (
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            )}
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu (you can add state management to toggle this) */}
-      <div className="md:hidden mt-4 pb-4 border-t border-gray-200">
-        <div className="flex flex-col space-y-4 pt-4">
-          <Link href="/" className="text-[#323232]  hover:text-gray-900 font-[700]">
-            Home
-          </Link>
-          <Link href="/about" className="text-[#323232]  hover:text-gray-900 font-[700]">
-            About
-          </Link>
-          <Link
-            href="/software-development"
-            className="text-[#323232]  hover:text-gray-900 font-[700]"
-          >
-            Software Development
-          </Link>
-          <Link
-            href="/mobile-app-development"
-            className="text-[#323232]  hover:text-gray-900 font-[700]"
-          >
-            Mobile App Development
-          </Link>
-          <Link href="/ui-ux-design" className="text-[#323232]  hover:text-gray-900 font-[700]">
-            UI/UX Design
-          </Link>
-          <Link href="/case-study" className="text-[#323232]  hover:text-gray-900 font-[700]">
-            Case Study
-          </Link>
-          <Link href="/contact">
-            <LETSDISCUSS />
-          </Link>
+      {/* Mobile Menu */}
+      <div
+        className={`lg:hidden transition-all duration-300 ease-in-out ${
+          isMobileMenuOpen ? 'max-h-96 opacity-100 mt-4 pb-4' : 'max-h-0 opacity-0 overflow-hidden'
+        }`}
+      >
+        <div className="border-t border-gray-200 pt-4">
+          <div className="flex flex-col space-y-3">
+            <Link
+              href="/"
+              className="text-[#323232] hover:text-gray-900 font-[700] py-2 px-2 transition-colors"
+              onClick={closeMobileMenu}
+            >
+              Home
+            </Link>
+            <Link
+              href="/about"
+              className="text-[#323232] hover:text-gray-900 font-[700] py-2 px-2 transition-colors"
+              onClick={closeMobileMenu}
+            >
+              About
+            </Link>
+            <Link
+              href="/software-development"
+              className="text-[#323232] hover:text-gray-900 font-[700] py-2 px-2 transition-colors"
+              onClick={closeMobileMenu}
+            >
+              Software Development
+            </Link>
+            <Link
+              href="/mobile-app-development"
+              className="text-[#323232] hover:text-gray-900 font-[700] py-2 px-2 transition-colors"
+              onClick={closeMobileMenu}
+            >
+              Mobile App Development
+            </Link>
+            <Link
+              href="/ui-ux-design"
+              className="text-[#323232] hover:text-gray-900 font-[700] py-2 px-2 transition-colors"
+              onClick={closeMobileMenu}
+            >
+              UI/UX Design
+            </Link>
+            <Link
+              href="/case-study"
+              className="text-[#323232] hover:text-gray-900 font-[700] py-2 px-2 transition-colors"
+              onClick={closeMobileMenu}
+            >
+              Case Study
+            </Link>
+            <div className="pt-2">
+              <Link href="/contact" onClick={closeMobileMenu}>
+                <LETSDISCUSS />
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </nav>

@@ -3,7 +3,7 @@ import Image from 'next/image';
 export default function VideoSection() {
   return (
     <div
-      className="min-h-screen w-full flex flex-col items-center justify-center px-4 py-20"
+      className="md:min-h-screen w-full flex flex-col items-center justify-center px-4 py-20"
       style={{
         backgroundImage: "url('/hero-bg-2.svg')",
         backgroundPosition: 'bottom',

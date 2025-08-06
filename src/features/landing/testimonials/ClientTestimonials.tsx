@@ -1,5 +1,6 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
 
 export default function ClientTestimonials() {
   const testimonials = [
@@ -24,6 +25,8 @@ export default function ClientTestimonials() {
   ];
 
   const [currentSlide, setCurrentSlide] = useState(0);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: false, threshold: 0.1 });
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -32,10 +35,88 @@ export default function ClientTestimonials() {
     return () => clearInterval(interval);
   }, [testimonials.length]);
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.6,
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  const headerVariants = {
+    hidden: { opacity: 0, y: -30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: 'easeOut',
+      },
+    },
+  };
+
+  const braceVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 0.8,
+        ease: 'easeOut',
+        delay: 0.4,
+      },
+    },
+  };
+
+  const testimonialVariants = {
+    enter: {
+      x: 300,
+      opacity: 0,
+    },
+    center: {
+      zIndex: 1,
+      x: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5,
+        ease: 'easeOut',
+      },
+    },
+    exit: {
+      zIndex: 0,
+      x: -300,
+      opacity: 0,
+      transition: {
+        duration: 0.5,
+        ease: 'easeOut',
+      },
+    },
+  };
+
+  const indicatorVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        delay: 0.8,
+      },
+    },
+  };
+
   return (
-    <div
+    <motion.div
+      ref={ref}
       className="relative md:min-h-screen bg-black text-white flex flex-col items-center justify-center py-8 sm:py-12 lg:py-16 px-4 sm:px-6 lg:px-8 overflow-hidden"
       style={{ backgroundImage: "url('/features-bg.svg')" }}
+      variants={containerVariants}
+      initial="hidden"
+      animate={isInView ? 'visible' : 'hidden'}
     >
       {/* Grid background pattern */}
       <div
@@ -49,117 +130,179 @@ export default function ClientTestimonials() {
 
       <div className="relative z-10 w-full max-w-7xl mx-auto text-center">
         {/* Header Section */}
-        <div className="mb-8 sm:mb-12 lg:mb-16">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold mb-2 sm:mb-4 uppercase tracking-wide sm:tracking-wider lg:tracking-widest font-mono leading-tight">
+        <motion.div className="mb-8 sm:mb-12 lg:mb-16" variants={headerVariants}>
+          <motion.h2
+            className="text-2xl sm:text-3xl md:text-4xl font-overcame lg:text-5xl xl:text-6xl font-extrabold mb-2 sm:mb-4 uppercase tracking-wide sm:tracking-wider lg:tracking-widest font-mono leading-tight"
+            initial={{ opacity: 0, y: -20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
             Client Testimonials
-          </h2>
-          <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 px-2">
+          </motion.h2>
+          <motion.p
+            className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 px-2"
+            initial={{ opacity: 0, y: -20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
             Trusted by Businesses Worldwide
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
         {/* Testimonials Container */}
         <div className="relative flex items-center justify-center">
-          {/* Left Brace - Hidden on mobile, visible on larger screens */}
-          <div className="hidden lg:flex items-center justify-center flex-shrink-0 w-16 xl:w-24">
-            <span className="text-8xl xl:text-[13rem] translate-y-12 xl:translate-y-[180px] text-[#33E2B4] leading-none">
+          {/* Left Brace */}
+          <motion.div
+            className="hidden lg:flex items-center justify-center flex-shrink-0 w-16 xl:w-24"
+            variants={braceVariants}
+          >
+            <motion.span
+              className="text-8xl xl:text-[13rem] translate-y-12 xl:translate-y-[180px] text-[#33E2B4] leading-none"
+              animate={{
+                rotateY: [0, 10, 0],
+                transition: {
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                },
+              }}
+            >
               {'}'}
-            </span>
-          </div>
+            </motion.span>
+          </motion.div>
 
           {/* Testimonial Carousel Container */}
-          <div className="flex-1 overflow-hidden mx-4 lg:mx-8">
-            <div
-              className="flex transition-transform duration-700 ease-in-out"
-              style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-            >
-              {testimonials.map((testimonial, index) => (
-                <div
-                  key={index}
-                  className="flex-shrink-0 w-full flex flex-col items-center justify-center min-h-[250px] sm:min-h-[300px] lg:min-h-[350px] px-2 sm:px-4 lg:px-8"
+          <motion.div
+            className="flex-1 overflow-hidden mx-4 lg:mx-8"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+          >
+            <div className="relative h-[250px] sm:h-[300px] lg:h-[350px]">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentSlide}
+                  className="absolute inset-0 flex flex-col items-center justify-center px-2 sm:px-4 lg:px-8"
+                  variants={testimonialVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
                 >
                   {/* Testimonial Text */}
-                  <div className="mb-6 sm:mb-8 lg:mb-12">
+                  <motion.div
+                    className="mb-6 sm:mb-8 lg:mb-12"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
+                  >
                     <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl leading-relaxed max-w-xs sm:max-w-md md:max-w-lg lg:max-w-2xl xl:max-w-4xl mx-auto px-2">
-                      {testimonial.text}
+                      {testimonials[currentSlide].text}
                     </p>
-                  </div>
+                  </motion.div>
 
                   {/* Client Information */}
-                  <div className="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-4 lg:space-x-6">
+                  <motion.div
+                    className="flex flex-col sm:flex-row items-center justify-center space-y-3 sm:space-y-0 sm:space-x-4 lg:space-x-6"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.4 }}
+                  >
                     {/* Logo Placeholder */}
-                    <div className="w-20 h-8 sm:w-24 sm:h-10 lg:w-28 lg:h-12 bg-gray-800 rounded-md flex items-center justify-center border border-gray-700">
+                    <motion.div
+                      className="w-20 h-8 sm:w-24 sm:h-10 lg:w-28 lg:h-12 bg-gray-800 rounded-md flex items-center justify-center border border-gray-700"
+                      whileHover={{ scale: 1.05 }}
+                      transition={{ duration: 0.2 }}
+                    >
                       <span className="text-xs sm:text-sm text-white font-mono">LOGO</span>
-                    </div>
+                    </motion.div>
 
                     {/* Client Details */}
                     <div className="text-center sm:text-left">
                       <p className="text-sm sm:text-base lg:text-lg font-semibold text-white">
-                        {testimonial.clientName}
+                        {testimonials[currentSlide].clientName}
                       </p>
                       <p className="text-xs sm:text-sm lg:text-base text-gray-400 mt-1">
-                        {testimonial.clientTitle}
+                        {testimonials[currentSlide].clientTitle}
                       </p>
                     </div>
-                  </div>
-                </div>
-              ))}
+                  </motion.div>
+                </motion.div>
+              </AnimatePresence>
             </div>
-          </div>
+          </motion.div>
 
-          {/* Right Brace - Hidden on mobile, visible on larger screens */}
-          <div className="hidden lg:flex items-center justify-center flex-shrink-0 w-16 xl:w-24">
-            <span className="text-8xl xl:text-[13rem] -translate-y-12 xl:-translate-y-[180px] text-[#33E2B4] leading-none">
+          {/* Right Brace */}
+          <motion.div
+            className="hidden lg:flex items-center justify-center flex-shrink-0 w-16 xl:w-24"
+            variants={braceVariants}
+          >
+            <motion.span
+              className="text-8xl xl:text-[13rem] -translate-y-12 xl:-translate-y-[180px] text-[#33E2B4] leading-none"
+              animate={{
+                rotateY: [0, -10, 0],
+                transition: {
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                },
+              }}
+            >
               {'{'}
-            </span>
-          </div>
+            </motion.span>
+          </motion.div>
         </div>
 
-        {/* Mobile Braces - Only visible on mobile */}
-        {/* <div className="lg:hidden flex justify-center items-center space-x-8 my-8">
-          <span className="text-4xl sm:text-5xl text-[#33E2B4]">{'}'}</span>
-          <span className="text-4xl sm:text-5xl text-[#33E2B4]">{'{'}</span>
-        </div> */}
-
         {/* Carousel Indicators */}
-        <div className="flex justify-center mt-8 sm:mt-10 lg:mt-12 space-x-2 sm:space-x-3">
+        <motion.div
+          className="flex justify-center mt-8 sm:mt-10 lg:mt-12 space-x-2 sm:space-x-3"
+          variants={indicatorVariants}
+        >
           {testimonials.map((_, index) => (
-            <button
+            <motion.button
               key={index}
               className={`w-2 h-2 sm:w-2 sm:h-2 lg:w-2 lg:h-2 transition-all duration-300 ${
                 index === currentSlide ? 'bg-[#00A77B] scale-110' : 'bg-white hover:bg-gray-300'
               }`}
               onClick={() => setCurrentSlide(index)}
               aria-label={`Go to slide ${index + 1}`}
+              whileHover={{ scale: 1.2 }}
+              whileTap={{ scale: 0.9 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: index * 0.1 + 0.8 }}
             />
           ))}
-        </div>
+        </motion.div>
 
         {/* Navigation Arrows for Mobile */}
-        <div className="flex justify-center space-x-8 mt-6 sm:hidden">
-          <button
+        <motion.div
+          className="flex justify-center space-x-8 mt-6 sm:hidden"
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          transition={{ duration: 0.6, delay: 1 }}
+        >
+          <motion.button
             onClick={() =>
               setCurrentSlide((prev) => (prev - 1 + testimonials.length) % testimonials.length)
             }
             className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-white hover:bg-gray-700 transition-colors"
             aria-label="Previous testimonial"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
           >
             ←
-          </button>
-          <button
+          </motion.button>
+          <motion.button
             onClick={() => setCurrentSlide((prev) => (prev + 1) % testimonials.length)}
             className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-white hover:bg-gray-700 transition-colors"
             aria-label="Next testimonial"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
           >
             →
-          </button>
-        </div>
-
-        {/* Slide Counter */}
-        {/* <div className="mt-4 sm:mt-6 text-xs sm:text-sm text-gray-500">
-          {currentSlide + 1} / {testimonials.length}
-        </div> */}
+          </motion.button>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }

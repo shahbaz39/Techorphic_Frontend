@@ -1,8 +1,41 @@
+'use client';
+
 import Image from 'next/image';
+import { motion } from 'framer-motion';
+import { useInView } from 'framer-motion';
+import { useRef } from 'react';
 
 export default function VideoSection() {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: false, threshold: 0.1 });
+
+  // Animation variants for text only
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        duration: 0.6,
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: -30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        ease: 'easeOut',
+      },
+    },
+  };
+
   return (
-    <div
+    <motion.div
+      ref={ref}
       className="md:min-h-screen w-full flex flex-col items-center justify-center px-4 py-20"
       style={{
         backgroundImage: "url('/hero-bg-2.svg')",
@@ -10,20 +43,45 @@ export default function VideoSection() {
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
       }}
+      variants={containerVariants}
+      initial="hidden"
+      animate={isInView ? 'visible' : 'hidden'}
     >
       {/* Header Text */}
-      <div className="text-center mb-8 max-w-4xl">
-        <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-black mb-6 leading-tight">
-          THE CHOICE OF
+      <motion.div className="text-center mb-8 max-w-4xl" variants={itemVariants}>
+        <motion.h2
+          className="text-4xl md:text-5xl font-overcame lg:text-6xl font-bold text-black mb-6 leading-tight"
+          variants={itemVariants}
+        >
+          <motion.span
+            initial={{ opacity: 0, y: -20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            THE CHOICE OF
+          </motion.span>
           <br />
-          INDUSTRY LEADERS
-        </h2>
-        <p className="text-base md:text-3xl text-gray-700  max-w-2xl mx-auto">
+          <motion.span
+            initial={{ opacity: 0, y: -20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            INDUSTRY LEADERS
+          </motion.span>
+        </motion.h2>
+
+        <motion.p
+          className="text-base md:text-3xl text-gray-700 max-w-2xl mx-auto"
+          variants={itemVariants}
+          initial={{ opacity: 0, y: -20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+        >
           Take a behind-the-scenes look at how we build
           <br />
           digital transformation success stories.
-        </p>
-      </div>
+        </motion.p>
+      </motion.div>
 
       {/* Video Thumbnail */}
       <div className="relative w-full max-w-4xl aspect-video rounded-2xl overflow-hidden shadow-2xl">
@@ -43,6 +101,6 @@ export default function VideoSection() {
           </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

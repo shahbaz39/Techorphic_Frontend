@@ -1,12 +1,15 @@
 'use client';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { useInView } from 'framer-motion';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 
 export default function ServicesOverview() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [hoveredCard, setHoveredCard] = useState(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [isInServicesArea, setIsInServicesArea] = useState(false);
+  const [canScrollNormally, setCanScrollNormally] = useState(true);
 
   const handleMouseMove = (e, cardIndex) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -19,33 +22,97 @@ export default function ServicesOverview() {
   const handleMouseLeave = () => {
     setHoveredCard(null);
   };
+
+  // Expanded services array with all cards
   const services = [
     {
-      title: 'Software Solutions',
+      title: 'Web Development',
       items: [
-        'Web Application Development',
-        'Mobile App Development',
-        'Cloud-Native Applications',
-        'Blockchain Development',
-        'MVP Development Services',
+        'React & Next.js Applications',
+        'Vue.js Development',
+        'Full-Stack Solutions',
+        'Progressive Web Apps',
+        'E-commerce Platforms',
       ],
     },
     {
-      title: 'Product & QA Services',
+      title: 'Mobile Development',
       items: [
-        'Product Management & Strategy',
-        'QA & Testing Services',
-        'Maintenance & Optimization',
-        'Landing Page Development',
+        'iOS App Development',
+        'Android Development',
+        'React Native Solutions',
+        'Flutter Applications',
+        'Cross-Platform Apps',
       ],
     },
     {
-      title: 'Cloud & Security Services',
+      title: 'Cloud Solutions',
       items: [
-        'IoT Solutions',
+        'AWS Integration',
+        'Azure Services',
+        'Google Cloud Platform',
         'Serverless Architecture',
-        'Blockchain Solutions',
-        'Cybersecurity Services',
+        'Cloud Migration',
+      ],
+    },
+    {
+      title: 'AI & Machine Learning',
+      items: [
+        'Natural Language Processing',
+        'Computer Vision',
+        'Predictive Analytics',
+        'Chatbot Development',
+        'Data Science Solutions',
+      ],
+    },
+    {
+      title: 'Blockchain & Web3',
+      items: [
+        'Smart Contract Development',
+        'DeFi Applications',
+        'NFT Marketplaces',
+        'Cryptocurrency Solutions',
+        'Web3 Integration',
+      ],
+    },
+    {
+      title: 'DevOps & Infrastructure',
+      items: [
+        'CI/CD Pipeline Setup',
+        'Docker Containerization',
+        'Kubernetes Orchestration',
+        'Infrastructure as Code',
+        'Monitoring & Analytics',
+      ],
+    },
+    {
+      title: 'UI/UX Design',
+      items: [
+        'User Interface Design',
+        'User Experience Research',
+        'Prototyping & Wireframing',
+        'Design Systems',
+        'Mobile App Design',
+      ],
+    },
+    {
+      title: 'Quality Assurance',
+      items: [
+        'Automated Testing',
+        'Manual Testing',
+        'Performance Testing',
+        'Security Testing',
+        'Continuous Integration',
+      ],
+    },
+    {
+      title: 'Data Analytics',
+      items: [
+        'Business Intelligence',
+        'Data Visualization',
+        'Big Data Processing',
+        'Real-time Analytics',
+        'Data Warehousing',
       ],
     },
   ];
@@ -80,13 +147,190 @@ export default function ServicesOverview() {
 
   const headerRef = useRef(null);
   const servicesRef = useRef(null);
+  const servicesContainerRef = useRef(null);
   const caseStudiesRef = useRef(null);
   const ctaRef = useRef(null);
+  const lastScrollTime = useRef(0);
+  const scrollTimeout = useRef(null);
 
   const headerInView = useInView(headerRef, { once: true, threshold: 0.3 });
   const servicesInView = useInView(servicesRef, { once: true, threshold: 0.1 });
   const caseStudiesInView = useInView(caseStudiesRef, { once: true, threshold: 0.1 });
   const ctaInView = useInView(ctaRef, { once: true, threshold: 0.3 });
+
+  // Calculate horizontal scroll distance
+  const cardWidth = 450;
+  const totalCards = services.length;
+  const containerWidth = typeof window !== 'undefined' ? window.innerWidth : 1200;
+  const visibleCards = Math.floor(containerWidth / cardWidth);
+  const maxScrollDistance = Math.max(0, (totalCards - visibleCards) * cardWidth);
+
+  // Enhanced scroll area detection with debouncing
+  const checkServicesArea = useCallback(() => {
+    const container = servicesContainerRef.current;
+    if (!container) return false;
+
+    const containerRect = container.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+
+    // More precise area detection with buffer zones
+    const topBuffer = viewportHeight * 0.1;
+    const bottomBuffer = viewportHeight * 0.1;
+
+    const isInArea =
+      containerRect.top <= topBuffer && containerRect.bottom >= viewportHeight - bottomBuffer;
+
+    return isInArea;
+  }, []);
+
+  // Enhanced scroll handler with better logic
+  const handleWheel = useCallback(
+    (e) => {
+      const currentTime = Date.now();
+      const isInArea = checkServicesArea();
+
+      // Debounce rapid scroll events - reduced for faster response
+      if (currentTime - lastScrollTime.current < 58) return; // Reduced from 16ms to 8ms
+      lastScrollTime.current = currentTime;
+
+      if (!isInArea) {
+        setIsInServicesArea(false);
+        setCanScrollNormally(true);
+        return;
+      }
+
+      setIsInServicesArea(true);
+
+      const delta = Math.sign(e.deltaY);
+      const currentProgress = scrollProgress;
+
+      // Determine if we should allow normal scrolling
+      const shouldAllowNormalScroll =
+        (currentProgress <= 0 && delta < 0) || // At start, scrolling up
+        (currentProgress >= 1 && delta > 0); // At end, scrolling down
+
+      if (shouldAllowNormalScroll) {
+        // Allow a brief moment for normal scrolling to take effect
+        setCanScrollNormally(true);
+
+        // Clear any existing timeout
+        if (scrollTimeout.current) {
+          clearTimeout(scrollTimeout.current);
+        }
+
+        // Set a timeout to re-enable horizontal scrolling
+        scrollTimeout.current = setTimeout(() => {
+          if (checkServicesArea()) {
+            setCanScrollNormally(false);
+          }
+        }, 100);
+
+        return;
+      }
+
+      // Prevent default and handle horizontal scrolling
+      e.preventDefault();
+      setCanScrollNormally(false);
+
+      // Smoother progress calculation with much faster speed
+      const step = 0.035; // Much faster scroll speed (was 0.012)
+      const newProgress = Math.max(0, Math.min(1, currentProgress + delta * step));
+
+      setScrollProgress(newProgress);
+    },
+    [scrollProgress, checkServicesArea],
+  );
+
+  // Main scroll event handler
+  useEffect(() => {
+    const wheelHandler = (e) => {
+      handleWheel(e);
+    };
+
+    // Use passive: false only when necessary
+    window.addEventListener('wheel', wheelHandler, { passive: false });
+
+    return () => {
+      window.removeEventListener('wheel', wheelHandler);
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current);
+      }
+    };
+  }, [handleWheel]);
+
+  // Body scroll management
+  useEffect(() => {
+    if (isInServicesArea && !canScrollNormally) {
+      // Prevent body scroll when in services area and handling horizontal scroll
+      document.body.style.overflow = 'hidden';
+      document.body.style.height = '100vh';
+    } else {
+      // Allow normal scrolling
+      document.body.style.overflow = '';
+      document.body.style.height = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.height = '';
+    };
+  }, [isInServicesArea, canScrollNormally]);
+
+  // Intersection observer for better area detection
+  useEffect(() => {
+    const container = servicesContainerRef.current;
+    if (!container) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        const isVisible = entry.isIntersecting && entry.intersectionRatio > 0.1;
+
+        if (!isVisible) {
+          setIsInServicesArea(false);
+          setCanScrollNormally(true);
+        }
+      },
+      {
+        threshold: [0, 0.1, 0.5, 0.9, 1],
+        rootMargin: '-10% 0px -10% 0px',
+      },
+    );
+
+    observer.observe(container);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  // Reset scroll progress when leaving services area
+  useEffect(() => {
+    if (!isInServicesArea && scrollProgress > 0 && scrollProgress < 1) {
+      // Smoothly reset to nearest end
+      const targetProgress = scrollProgress < 0.5 ? 0 : 1;
+      const resetAnimation = () => {
+        setScrollProgress((prev) => {
+          const diff = targetProgress - prev;
+          if (Math.abs(diff) < 0.01) return targetProgress;
+          return prev + diff * 0.1;
+        });
+
+        if (Math.abs(scrollProgress - targetProgress) > 0.01) {
+          requestAnimationFrame(resetAnimation);
+        }
+      };
+      requestAnimationFrame(resetAnimation);
+    }
+  }, [isInServicesArea, scrollProgress]);
+
+  // Calculate transform with easing
+  const easeInOutCubic = (t) => {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  };
+
+  const easedProgress = easeInOutCubic(scrollProgress);
+  const xTransform = -easedProgress * maxScrollDistance;
 
   // Animation variants
   const containerVariants = {
@@ -94,7 +338,7 @@ export default function ServicesOverview() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2,
+        staggerChildren: 0.1,
         delayChildren: 0.1,
       },
     },
@@ -133,12 +377,12 @@ export default function ServicesOverview() {
       },
     },
     hover: {
-      y: -8,
-      scale: 1.03,
-      transition: {
-        duration: 0.15,
-        ease: 'easeInOut',
-      },
+      // y: -8,
+      // scale: 1.03,
+      // transition: {
+      //   duration: 0.15,
+      //   ease: 'easeInOut',
+      // },
     },
   };
 
@@ -197,7 +441,7 @@ export default function ServicesOverview() {
 
   return (
     <div
-      className="min-h-[100vh] w-full bg-cover bg-center relative overflow-hidden"
+      className="w-full bg-cover bg-center relative overflow-hidden"
       style={{ backgroundImage: "url('/hero-bg-2.svg')" }}
     >
       {/* Animated background elements */}
@@ -217,18 +461,36 @@ export default function ServicesOverview() {
         }}
       />
 
-      <div className="container mx-auto px-4 py-16 relative z-10">
-        {/* Header Section */}
+      {/* Progress indicator */}
+      {/* {isInServicesArea && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50"
+        >
+          <div className="w-64 h-[3px] bg-white/20 rounded-full backdrop-blur-sm">
+            <motion.div
+              className="h-full bg-emerald-500 rounded-full"
+              style={{ width: `${scrollProgress * 100}%` }}
+              transition={{ duration: 0.1 }}
+            />
+          </div>
+        </motion.div>
+      )} */}
+
+      {/* Header Section */}
+      <div className="container mx-auto px-4 pt-20 relative z-10">
         <motion.div
           ref={headerRef}
           initial="hidden"
           animate={headerInView ? 'visible' : 'hidden'}
           variants={containerVariants}
-          className="text-center mb-16"
+          className="text-center"
         >
           <motion.h2
             variants={textRevealVariants}
-            className="text-4xl md:text-5xl font-bold mb-8 text-gray-800"
+            className="text-4xl md:text-5xl font-bold font-overcame mb-8 text-gray-800"
           >
             <motion.span
               initial={{ opacity: 0, y: 30 }}
@@ -254,98 +516,109 @@ export default function ServicesOverview() {
             Our Core Software <br /> Development Services
           </motion.p>
         </motion.div>
+      </div>
 
-        {/* Service Cards */}
-        <motion.div
-          ref={servicesRef}
-          initial="hidden"
-          animate={servicesInView ? 'visible' : 'hidden'}
-          variants={containerVariants}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16 max-w-7xl mx-auto"
-        >
-          {services.map((service, index) => (
+      {/* Horizontal Scrolling Service Cards Section */}
+      <div ref={servicesContainerRef} className="h-screen relative overflow-hidden -mt-8">
+        <div className="h-full flex items-center">
+          <motion.div ref={servicesRef} className="h-full flex items-center  w-full">
             <div
-              key={index}
-              className="relative group"
-              onMouseMove={(e) => handleMouseMove(e, index)}
-              onMouseLeave={handleMouseLeave}
+              style={{
+                transform: `translateX(${xTransform}px)`,
+                transition: canScrollNormally ? 'transform 0.6s ease-out' : 'none',
+              }}
+              className="flex space-x-8 py-8 px-8"
             >
-              {/* Static base glow */}
-              <div className="absolute -inset-0.5 bg-gradient-to-r from-emerald-200/20 to-emerald-400/20 rounded-3xl blur-sm opacity-60" />
-
-              {/* Dynamic mouse-following glow */}
-              {hoveredCard === index && (
+              {services.map((service, index) => (
                 <div
-                  className="absolute w-32 h-32 bg-gradient-radial from-emerald-400/60 via-cyan-300/40 to-transparent rounded-full blur-xl opacity-80 pointer-events-none transition-opacity duration-300"
-                  style={{
-                    left: mousePosition.x - 64,
-                    top: mousePosition.y - 64,
-                    background: `radial-gradient(circle, rgba(16, 185, 129, 0.6) 0%, rgba(34, 197, 94, 0.4) 30%, rgba(6, 182, 212, 0.3) 60%, transparent 100%)`,
-                  }}
-                />
-              )}
-
-              {/* Enhanced hover glow layers */}
-              {/* <div className="absolute -inset-2 bg-gradient-to-r from-emerald-400/30 via-cyan-400/20 to-emerald-600/30 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-150" /> */}
-              {/* <div className="absolute -inset-1 bg-gradient-to-r from-emerald-300/40 to-emerald-500/40 rounded-3xl blur-md opacity-40 group-hover:opacity-80 transition-opacity duration-150" /> */}
-
-              <motion.div
-                variants={cardVariants}
-                whileHover="hover"
-                className="cursor-pointer bg-white/15 backdrop-blur-md rounded-3xl border border-[#00A77B]/40 p-8 h-full shadow-xl relative overflow-hidden"
-                style={{
-                  background:
-                    'linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 100%)',
-                }}
-              >
-                <motion.h3
-                  className="text-2xl md:text-4xl font-bold text-emerald-600 mb-8 leading-tight max-w-[300px]"
-                  transition={{ duration: 0.2 }}
+                  key={index}
+                  className="relative group flex-shrink-0 w-[400px]"
+                  onMouseMove={(e) => handleMouseMove(e, index)}
+                  onMouseLeave={handleMouseLeave}
                 >
-                  {service.title}
-                </motion.h3>
-                <div className="space-y-2">
-                  {service.items.map((item, itemIndex) => (
-                    <motion.div
-                      key={itemIndex}
-                      className="group/item"
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={servicesInView ? { opacity: 1, x: 0 } : {}}
-                      transition={{
-                        delay: index * 0.1 + itemIndex * 0.05,
-                        duration: 0.4,
-                      }}
-                    >
-                      <div className="flex items-center space-x-3">
-                        <p className="text-emerald-700 text-lg font-medium">{item}</p>
-                      </div>
-                      {itemIndex < service.items.length - 1 && (
-                        <motion.div
-                          className="w-full h-[.5px] bg-[#00A77B] mt-4"
-                          initial={{ scaleX: 0 }}
-                          animate={servicesInView ? { scaleX: 1 } : {}}
-                          transition={{
-                            delay: index * 0.1 + itemIndex * 0.05 + 0.2,
-                            duration: 0.3,
-                          }}
-                          style={{ originX: 0 }}
-                        />
-                      )}
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-            </div>
-          ))}
-        </motion.div>
+                  {/* Static base glow */}
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-emerald-200/20 to-emerald-400/20 rounded-3xl blur-sm opacity-0" />
 
-        {/* Call to Action Section */}
+                  {/* Dynamic mouse-following glow */}
+                  {hoveredCard === index && (
+                    <div
+                      className="absolute w-32 h-32 bg-gradient-radial from-emerald-400/60 via-cyan-300/40 to-transparent rounded-full blur-xl opacity-80 pointer-events-none transition-opacity duration-300"
+                      style={{
+                        left: mousePosition.x - 64,
+                        top: mousePosition.y - 64,
+                        background: `radial-gradient(circle, rgba(16, 185, 129, 0.6) 0%, rgba(34, 197, 94, 0.4) 30%, rgba(6, 182, 212, 0.3) 60%, transparent 100%)`,
+                      }}
+                    />
+                  )}
+
+                  <motion.div
+                    initial="hidden"
+                    animate="visible"
+                    variants={cardVariants}
+                    whileHover="hover"
+                    className="cursor-pointer bg-white/15 backdrop-blur-md rounded-3xl border border-[#00A77B]/40 p-8 h-full  relative overflow-hidden min-h-[480px]"
+                    style={{
+                      background:
+                        'linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.1) 100%)',
+                    }}
+                  >
+                    <motion.h3
+                      className="text-2xl md:text-3xl font-bold text-emerald-600 mb-8 leading-tight"
+                      transition={{ duration: 0.2 }}
+                    >
+                      {service.title}
+                    </motion.h3>
+                    <div className="space-y-2">
+                      {service.items.map((item, itemIndex) => (
+                        <motion.div
+                          key={itemIndex}
+                          className="group/item"
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{
+                            delay: index * 0.05 + itemIndex * 0.03,
+                            duration: 0.4,
+                          }}
+                        >
+                          <div className="flex items-center space-x-3">
+                            <p className="text-emerald-700 text-lg font-medium">{item}</p>
+                          </div>
+                          {itemIndex < service.items.length - 1 && (
+                            <motion.div
+                              className="w-full h-[.5px] bg-[#00A77B] mt-4"
+                              initial={{ scaleX: 0 }}
+                              animate={{ scaleX: 1 }}
+                              transition={{
+                                delay: index * 0.05 + itemIndex * 0.03 + 0.2,
+                                duration: 0.3,
+                              }}
+                              style={{ originX: 0 }}
+                            />
+                          )}
+                        </motion.div>
+                      ))}
+                    </div>
+
+                    {/* Card number indicator */}
+                    {/* <div className="absolute top-6 right-6 w-8 h-8 bg-emerald-500/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                      <span className="text-emerald-700 font-bold text-sm">{index + 1}</span>
+                    </div> */}
+                  </motion.div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Call to Action Section */}
+      <div className="container mx-auto px-4 pb-8 relative z-10">
         <motion.div
           ref={ctaRef}
           initial="hidden"
           animate={ctaInView ? 'visible' : 'hidden'}
           variants={containerVariants}
-          className="flex flex-col lg:flex-row items-center justify-between max-w-6xl mx-auto"
+          className="flex flex-col lg:flex-row items-center justify-between max-w-6xl mx-auto mb-16"
         >
           <motion.div variants={itemVariants} className="text-center lg:text-left mb-6 lg:mb-0">
             <p className="text-2xl md:text-3xl text-gray-700">Have a project in mind?</p>
@@ -365,10 +638,8 @@ export default function ServicesOverview() {
             <span className="relative z-10">Get a Free Estimation</span>
           </motion.button>
         </motion.div>
-      </div>
 
-      {/* Case Studies Section */}
-      <div className="container mx-auto px-4 py-6 relative z-10">
+        {/* Case Studies Section */}
         <motion.div
           ref={caseStudiesRef}
           initial="hidden"
@@ -377,7 +648,7 @@ export default function ServicesOverview() {
         >
           <motion.h2
             variants={textRevealVariants}
-            className="text-4xl md:text-5xl font-bold mb-8 text-center text-gray-800 uppercase"
+            className="text-4xl md:text-5xl font-overcame font-bold mb-8 text-center text-gray-800 uppercase"
           >
             Case Studies
           </motion.h2>
@@ -417,7 +688,7 @@ export default function ServicesOverview() {
           </motion.div>
 
           {/* Bottom text and link */}
-          <motion.div variants={itemVariants} className="text-center mb-16">
+          <motion.div variants={itemVariants} className="text-center">
             <motion.p
               className="text-xl md:text-2xl text-gray-700 mb-4"
               variants={textRevealVariants}

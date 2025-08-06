@@ -52,8 +52,8 @@ export default function FocusedAreasCards() {
   const cardVariants = {
     hidden: {
       opacity: 0,
-      y: 200, // Start much lower
-      rotateX: 180, // Flip from the top (more dramatic)
+      y: -200, // Changed from 200 to -200 (cards come from top)
+      rotateX: -180, // Changed from 180 to -180 (flip from bottom instead of top)
       scale: 0, // Start completely invisible
       z: -200, // Further back in 3D space
     },
@@ -148,10 +148,10 @@ export default function FocusedAreasCards() {
         }}
       />
       <motion.p
-        className="uppercase font-bold text-3xl lg:text-5xl text-center mb-16 text-white"
+        className="uppercase font-bold text-3xl  font-overcame lg:text-5xl text-center mb-16 text-white"
         initial={{ opacity: 0, y: -30 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, amount: 0.3 }}
+        viewport={{ once: false, amount: 0.3 }} // Changed once to false
         transition={{ duration: 0.8, ease: 'easeOut' }}
       >
         <motion.span
@@ -184,7 +184,7 @@ export default function FocusedAreasCards() {
           variants={containerVariants}
           initial="hidden"
           whileInView="visible" // This triggers the animation when the component comes into view
-          viewport={{ once: true, amount: 0.2 }} // Ensures it only plays once when 20% of the component is visible
+          viewport={{ once: false, amount: 0.2 }} // Changed once to false - animation triggers every time
           // Add gentle container breathing animation
           animate={{
             scale: [1, 1.01, 1],

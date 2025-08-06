@@ -11,7 +11,8 @@ import {
 
 export default function FAQsSection() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-100px' });
+  // Removed 'once: true' to make animations trigger every time user enters the section
+  const isInView = useInView(ref, { margin: '-100px' });
   const [windowSize, setWindowSize] = useState({ width: 1200, height: 800 });
   const [mounted, setMounted] = useState(false);
 
@@ -83,9 +84,10 @@ export default function FAQsSection() {
         transition={{ duration: 1.2, delay: 0.3 }}
       />
 
-      {/* Floating particles - only render after mount to avoid hydration mismatch */}
+      {/* Floating particles - regenerated each time the section comes into view */}
       {mounted &&
         [...Array(6)].map((_, i) => {
+          // Generate new random positions each time isInView changes
           const initialX = Math.random() * windowSize.width;
           const initialY = Math.random() * windowSize.height;
           const targetX = Math.random() * windowSize.width;
@@ -93,7 +95,7 @@ export default function FAQsSection() {
 
           return (
             <motion.div
-              key={i}
+              key={`${i}-${isInView}`} // Changed key to force re-render when isInView changes
               className="absolute w-2 h-2 bg-white rounded-full opacity-30"
               initial={{
                 x: initialX,
@@ -107,11 +109,13 @@ export default function FAQsSection() {
                       y: targetY,
                       opacity: [0, 0.3, 0],
                     }
-                  : {}
+                  : {
+                      opacity: 0,
+                    }
               }
               transition={{
                 duration: 8 + Math.random() * 4,
-                repeat: Number.POSITIVE_INFINITY,
+                repeat: isInView ? Number.POSITIVE_INFINITY : 0,
                 delay: i * 0.5,
               }}
             />
@@ -133,7 +137,7 @@ export default function FAQsSection() {
         >
           {/* Glowing effect behind text */}
           <motion.span
-            className="absolute inset-0 text-transparent bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text blur-sm"
+            className="absolute inset-0 font-overcame text-transparent bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text blur-sm"
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 0.5 } : { opacity: 0 }}
             transition={{ duration: 1, delay: 0.8 }}
@@ -220,13 +224,27 @@ export default function FAQsSection() {
       >
         <motion.div
           className="w-20 h-20 border border-white/20 rounded-full"
-          animate={{
-            rotate: 360,
-            scale: [1, 1.1, 1],
-          }}
+          animate={
+            isInView
+              ? {
+                  rotate: 360,
+                  scale: [1, 1.1, 1],
+                }
+              : {
+                  rotate: 0,
+                  scale: 1,
+                }
+          }
           transition={{
-            rotate: { duration: 20, repeat: Number.POSITIVE_INFINITY, ease: 'linear' },
-            scale: { duration: 2, repeat: Number.POSITIVE_INFINITY },
+            rotate: {
+              duration: 20,
+              repeat: isInView ? Number.POSITIVE_INFINITY : 0,
+              ease: 'linear',
+            },
+            scale: {
+              duration: 2,
+              repeat: isInView ? Number.POSITIVE_INFINITY : 0,
+            },
           }}
         />
       </motion.div>

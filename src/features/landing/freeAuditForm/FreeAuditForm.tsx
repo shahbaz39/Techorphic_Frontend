@@ -14,6 +14,7 @@ interface SelectableButtonProps {
   isSelected: boolean;
   onClick: () => void;
   index: number;
+  isInView: boolean;
 }
 
 const SelectableButton: React.FC<SelectableButtonProps> = ({
@@ -21,11 +22,12 @@ const SelectableButton: React.FC<SelectableButtonProps> = ({
   isSelected,
   onClick,
   index,
+  isInView,
 }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
       transition={{ delay: index * 0.05, duration: 0.3 }}
       whileHover={{
         scale: 1.05,
@@ -74,6 +76,7 @@ interface AnimatedInputProps {
   onChange: (value: string) => void;
   index: number;
   rows?: number;
+  isInView: boolean;
 }
 
 const AnimatedInput: React.FC<AnimatedInputProps> = ({
@@ -83,6 +86,7 @@ const AnimatedInput: React.FC<AnimatedInputProps> = ({
   onChange,
   index,
   rows,
+  isInView,
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const inputId = label.toLowerCase().replace(/\s/g, '-');
@@ -98,12 +102,21 @@ const AnimatedInput: React.FC<AnimatedInputProps> = ({
         scale: 0.8,
         rotateY: -15,
       }}
-      animate={{
-        opacity: 1,
-        x: 0,
-        scale: 1,
-        rotateY: 0,
-      }}
+      animate={
+        isInView
+          ? {
+              opacity: 1,
+              x: 0,
+              scale: 1,
+              rotateY: 0,
+            }
+          : {
+              opacity: 0,
+              x: -100,
+              scale: 0.8,
+              rotateY: -15,
+            }
+      }
       transition={{
         delay: index * 0.2 + 1.2,
         duration: 0.8,
@@ -223,7 +236,7 @@ export default function FreeAuditForm() {
   const [selectedBudget, setSelectedBudget] = useState<string[]>([]);
 
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const isInView = useInView(ref, { once: false, margin: '-100px' });
 
   const handleServiceToggle = (service: string) => {
     setSelectedServices((prev) =>
@@ -287,7 +300,7 @@ export default function FreeAuditForm() {
         transition={{ duration: 0.8, delay: 0.2 }}
       >
         <motion.h2
-          className="text-4xl md:text-5xl font-extrabold mb-4 uppercase tracking-widest text-black"
+          className="text-4xl md:text-5xl  font-overcame font-extrabold mb-4 uppercase tracking-widest text-black"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
           transition={{ duration: 0.6, delay: 0.4 }}
@@ -339,6 +352,7 @@ export default function FreeAuditForm() {
               value={field.value}
               onChange={field.onChange}
               index={index}
+              isInView={isInView}
             />
           ))}
         </motion.div>
@@ -367,6 +381,7 @@ export default function FreeAuditForm() {
                 isSelected={selectedServices.includes(service)}
                 onClick={() => handleServiceToggle(service)}
                 index={index}
+                isInView={isInView}
               />
             ))}
           </div>
@@ -396,6 +411,7 @@ export default function FreeAuditForm() {
                 isSelected={selectedBudget.includes(budget)}
                 onClick={() => handleBudgetToggle(budget)}
                 index={index}
+                isInView={isInView}
               />
             ))}
           </div>
@@ -414,6 +430,7 @@ export default function FreeAuditForm() {
             onChange={setMessage}
             index={6}
             rows={4}
+            isInView={isInView}
           />
         </motion.div>
 

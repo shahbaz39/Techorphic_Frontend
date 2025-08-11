@@ -3,7 +3,6 @@ import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 
 // Mock FocusedAreasCards component
-import FocusedAreasCards from './FocusedAreasCards';
 
 export default function WhoWeAre() {
   const ref = useRef(null);
@@ -89,7 +88,7 @@ export default function WhoWeAre() {
             <div className="grid grid-cols-1 lg:grid-cols-[55%_45%] items-center justify-between gap-6 lg:gap-8 w-full">
               <motion.p
                 className="leading-[130%] tracking-[-0.017em] py-6 sm:py-8 lg:py-10 order-2 lg:order-1"
-                style={{ fontSize: 'clamp(16px, 3.5vw, 38px)' }}
+                style={{ fontSize: 'clamp(16px, 3.5vw, 35px)' }}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: false, amount: 0.3 }}
@@ -114,7 +113,7 @@ export default function WhoWeAre() {
                   className="translate-y-2 sm:translate-y-4 lg:translate-y-10 inline-block"
                   style={{
                     fontSize: 'clamp(80px, 15vw, 256px)',
-                    filter: 'drop-shadow(0 0 20px rgba(0, 255, 188, 0.6))',
+                    // filter: 'drop-shadow(0 0 20px rgba(0, 255, 188, 0.6))',
                   }}
                   variants={bracketFloat}
                   animate="animate"
@@ -125,7 +124,7 @@ export default function WhoWeAre() {
                   className="-translate-y-8 sm:-translate-y-16 lg:-translate-y-30 inline-block"
                   style={{
                     fontSize: 'clamp(80px, 15vw, 256px)',
-                    filter: 'drop-shadow(0 0 20px rgba(0, 255, 188, 0.6))',
+                    // filter: 'drop-shadow(0 0 20px rgba(0, 255, 188, 0.6))',
                   }}
                   variants={bracketFloatReverse}
                   animate="animate"
@@ -138,7 +137,7 @@ export default function WhoWeAre() {
             {/* Middle paragraph */}
             <motion.p
               className="leading-[130%] tracking-[-0.017em] py-6 sm:py-8 lg:py-10 max-w-full sm:max-w-[90%] lg:max-w-[80%] text-center"
-              style={{ fontSize: 'clamp(15px, 3vw, 33px)' }}
+              style={{ fontSize: 'clamp(15px, 3vw, 30px)' }}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: false, amount: 0.3 }}
@@ -163,7 +162,7 @@ export default function WhoWeAre() {
                   className="translate-y-2 sm:translate-y-4 lg:translate-y-10 inline-block"
                   style={{
                     fontSize: 'clamp(80px, 15vw, 256px)',
-                    filter: 'drop-shadow(0 0 20px rgba(0, 255, 188, 0.6))',
+                    // filter: 'drop-shadow(0 0 20px rgba(0, 255, 188, 0.6))',
                   }}
                   variants={bracketFloat}
                   animate="animate"
@@ -174,7 +173,7 @@ export default function WhoWeAre() {
                   className="-translate-y-8 sm:-translate-y-16 lg:-translate-y-30 inline-block"
                   style={{
                     fontSize: 'clamp(80px, 15vw, 256px)',
-                    filter: 'drop-shadow(0 0 20px rgba(0, 255, 188, 0.6))',
+                    // filter: 'drop-shadow(0 0 20px rgba(0, 255, 188, 0.6))',
                   }}
                   variants={bracketFloatReverse}
                   animate="animate"
@@ -185,7 +184,7 @@ export default function WhoWeAre() {
 
               <motion.p
                 className="leading-[130%] tracking-[-0.017em] py-6 sm:py-8 lg:py-10 order-2"
-                style={{ fontSize: 'clamp(16px, 3.5vw, 38px)' }}
+                style={{ fontSize: 'clamp(16px, 3.5vw, 35px)' }}
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: false, amount: 0.3 }}
@@ -201,7 +200,7 @@ export default function WhoWeAre() {
             {/* Final paragraph */}
             <motion.div
               className="leading-[130%] tracking-[-0.017em] py-6 sm:py-8 lg:py-10 max-w-full sm:max-w-[90%] lg:max-w-[80%] text-center"
-              style={{ fontSize: 'clamp(15px, 3vw, 33px)' }}
+              style={{ fontSize: 'clamp(15px, 3vw, 30px)' }}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: false, amount: 0.3 }}
@@ -210,18 +209,6 @@ export default function WhoWeAre() {
             >
               And since digital disruption never stops, we&apos;re here for the long haul—keeping
               your technology up to date and future-ready.
-            </motion.div>
-
-            {/* Focused Areas Cards */}
-            <motion.div
-              className="w-full mt-6 sm:mt-8 lg:mt-12"
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: false, amount: 0.1 }}
-              variants={fadeInUp}
-              transition={{ delay: 0.5 }}
-            >
-              <FocusedAreasCards />
             </motion.div>
           </div>
         </div>

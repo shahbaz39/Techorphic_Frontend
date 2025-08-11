@@ -1,6 +1,9 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useRef } from 'react';
+import gsap from 'gsap';
+import ScrollTrigger from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function IndustryLeaders() {
   const cardData = [
@@ -9,73 +12,57 @@ export default function IndustryLeaders() {
     '100% Client Satisfaction Rate',
   ];
 
-  const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef(null);
+  const titleRef = useRef(null);
+  const leftCardsRef = useRef<HTMLDivElement[]>([]);
+  const rightCardsRef = useRef<HTMLDivElement[]>([]);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsVisible(false); // Reset first
-            setTimeout(() => setIsVisible(true), 50); // Then trigger animation
-          }
-        });
-      },
-      {
-        threshold: 0.3, // Trigger when 30% of section is visible
-        rootMargin: '0px 0px -100px 0px', // Trigger a bit before fully visible
-      },
-    );
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: 'top top',
+          end: () => `+=${cardData.length * 2 * 150}`, // Total cards count
+          pin: true,
+          scrub: true,
+        },
+      });
 
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
+      // Animate title first
+      tl.fromTo(
+        titleRef.current,
+        { opacity: 0, y: -50 },
+        { opacity: 1, y: 0, duration: 1, ease: 'power2.out' },
+        0,
+      );
 
-    return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
-      }
-    };
-  }, []);
+      // Animate left column cards
+      leftCardsRef.current.forEach((card, index) => {
+        tl.fromTo(
+          card,
+          { y: '100vh' },
+          { y: 0, duration: 1, ease: 'power2.out' },
+          0.5 + index * 0.3,
+        );
+      });
+
+      // Animate right column cards with slight delay
+      rightCardsRef.current.forEach((card, index) => {
+        tl.fromTo(
+          card,
+          { y: '100vh' },
+          { y: 0, duration: 1, ease: 'power2.out' },
+          0.65 + index * 0.3,
+        );
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, [cardData.length]);
 
   const leftRotations = [-3, -6, -2];
   const rightRotations = [2, 5, -1];
-
-  // Framer Motion variants for fade-in (same as your CSS animation)
-  const fadeInVariants = {
-    hidden: {
-      opacity: 0,
-      y: -30,
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 1,
-        ease: 'easeOut',
-      },
-    },
-  };
-
-  // Framer Motion variants for drop-in (same as your CSS animation)
-  const dropInVariants = {
-    hidden: {
-      opacity: 0,
-      y: -200,
-      scale: 0.9,
-    },
-    visible: (delay) => ({
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        duration: 0.8,
-        ease: [0.34, 1.56, 0.64, 1], // cubic-bezier(0.34, 1.56, 0.64, 1)
-        delay: delay,
-      },
-    }),
-  };
 
   return (
     <div
@@ -86,31 +73,23 @@ export default function IndustryLeaders() {
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl"></div>
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl"></div>
 
-      {/* Title with Framer Motion fade-in */}
-      <motion.div
-        className="text-center mb-20 relative z-10"
-        variants={fadeInVariants}
-        initial="hidden"
-        animate={isVisible ? 'visible' : 'hidden'}
-      >
+      {/* Title */}
+      <div ref={titleRef} className="text-center mb-20 relative z-10">
         <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white leading-[0.9] tracking-tight">
           THE CHOICE OF
           <br />
           <span>INDUSTRY LEADERS</span>
         </h1>
-      </motion.div>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 max-w-6xl w-full relative z-10">
         {/* Left Column */}
         <div className="flex flex-col gap-2 justify-center items-center">
           {cardData.map((text, index) => (
-            <motion.div
+            <div
               key={`left-${index}`}
+              ref={(el) => (leftCardsRef.current[index] = el!)}
               className="group relative cursor-pointer max-w-[27rem]"
-              variants={dropInVariants}
-              custom={isVisible ? 0.5 + index * 0.15 : 0}
-              initial="hidden"
-              animate={isVisible ? 'visible' : 'hidden'}
               style={{
                 transform: `rotate(${leftRotations[index]}deg)`,
               }}
@@ -129,20 +108,17 @@ export default function IndustryLeaders() {
                   {text}
                 </h3>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
 
         {/* Right Column */}
         <div className="flex flex-col gap-2 justify-center items-center">
           {cardData.map((text, index) => (
-            <motion.div
+            <div
               key={`right-${index}`}
+              ref={(el) => (rightCardsRef.current[index] = el!)}
               className="group relative cursor-pointer max-w-[27rem]"
-              variants={dropInVariants}
-              custom={isVisible ? 0.65 + index * 0.15 : 0}
-              initial="hidden"
-              animate={isVisible ? 'visible' : 'hidden'}
               style={{
                 transform: `rotate(${rightRotations[index]}deg)`,
               }}
@@ -161,7 +137,7 @@ export default function IndustryLeaders() {
                   {text}
                 </h3>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

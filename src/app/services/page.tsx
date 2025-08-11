@@ -1,6 +1,14 @@
+import FAQsSection from '@/features/landing/FAQsSection/FAQsSection';
+import Footer from '@/features/landing/footer/footer';
+import FreeAuditForm from '@/features/landing/freeAuditForm/FreeAuditForm';
 import Navbar from '@/features/landing/nav/Navbar';
+import ClientTestimonials from '@/features/landing/testimonials/ClientTestimonials';
 import AgencyLosAngeles from '@/features/services/AgencyLosAngeles';
 import HeroSection from '@/features/services/HeroSection';
+import SolutionsCarousel from '@/features/services/SolutionsCarousel';
+import Technologies from '@/features/services/Technologies';
+import WebDevelopmentProcess from '@/features/services/WebDevelopmentProcess';
+import WhyTechorphic from '@/features/services/WhyUs';
 import React from 'react';
 
 export default function page() {
@@ -15,6 +23,14 @@ export default function page() {
       </div>
       <HeroSection />
       <AgencyLosAngeles />
+      <Technologies />
+      <WhyTechorphic />
+      <WebDevelopmentProcess />
+      <SolutionsCarousel />
+      <ClientTestimonials />
+      <FreeAuditForm />
+      <FAQsSection />
+      <Footer />
     </div>
   );
 }

@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 
@@ -12,16 +12,12 @@ if (typeof window !== 'undefined') {
 }
 
 export default function ServicesOverview() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
-
   // Refs for GSAP
   const sectionRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Other refs
   const headerRef = useRef(null);
-  const servicesRef = useRef(null);
   const caseStudiesRef = useRef(null);
   const ctaRef = useRef(null);
 
@@ -29,18 +25,6 @@ export default function ServicesOverview() {
   const getCardRotation = (index: number) => {
     // Pattern: -rotate-2, rotate-2, -rotate-2, rotate-2, ...
     return index % 2 === 0 ? '-rotate-2' : 'rotate-2';
-  };
-
-  const handleMouseMove = (e: React.MouseEvent, cardIndex: number) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    setMousePosition({ x, y });
-    setHoveredCard(cardIndex);
-  };
-
-  const handleMouseLeave = () => {
-    setHoveredCard(null);
   };
 
   // Services data
@@ -167,7 +151,6 @@ export default function ServicesOverview() {
 
   // InView hooks
   const headerInView = useInView(headerRef, { once: true, threshold: 0.3 });
-  const servicesInView = useInView(servicesRef, { once: true, threshold: 0.1 });
   const caseStudiesInView = useInView(caseStudiesRef, { once: true, threshold: 0.1 });
   const ctaInView = useInView(ctaRef, { once: true, threshold: 0.3 });
 
@@ -326,7 +309,7 @@ export default function ServicesOverview() {
           >
             <motion.h2
               variants={textRevealVariants}
-              className="text-4xl md:text-5xl font-bold mb-8 text-gray-800"
+              className="text-4xl md:text-5xl font-overcame font-bold mb-8 text-gray-800"
             >
               <motion.span
                 initial={{ opacity: 0, y: 30 }}
@@ -364,8 +347,6 @@ export default function ServicesOverview() {
             <div
               key={index}
               className={`relative group flex-shrink-0 w-[350px] ${getCardRotation(index)} rounded-2xl mx-4 flex items-center bg-black`}
-              onMouseMove={(e) => handleMouseMove(e, index)}
-              onMouseLeave={handleMouseLeave}
             >
               <motion.div
                 initial="hidden"

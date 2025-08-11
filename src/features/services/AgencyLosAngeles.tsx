@@ -1,27 +1,22 @@
 'use client';
+import { motion } from 'framer-motion';
+import { useInView } from 'framer-motion';
+import { useRef, useEffect } from 'react';
+import gsap from 'gsap';
+import ScrollTrigger from 'gsap/ScrollTrigger';
 
-import React, { useRef, useState } from 'react';
-import { motion, useInView } from 'framer-motion';
+// Register GSAP plugin
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 export default function AgencyLosAngeles() {
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  // Refs for GSAP and animations
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const headerRef = useRef(null);
 
-  const sectionRef = useRef(null);
-  const sectionInView = useInView(sectionRef, { once: true, threshold: 0.2 });
-
-  const handleMouseMove = (e: React.MouseEvent, cardIndex: number) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    setMousePosition({ x, y });
-    setHoveredCard(cardIndex);
-  };
-
-  const handleMouseLeave = () => {
-    setHoveredCard(null);
-  };
-
+  // Services data matching the image + additional services for scroll
   const services = [
     {
       title: 'Custom Web Application Development',
@@ -36,9 +31,66 @@ export default function AgencyLosAngeles() {
     {
       title: 'MVP Development',
       description:
-        'Need a pilot platform to validate your idea? Our MVP development converts concepts into working prototypes that can be launched quickly and iterated on based on real Los Angeles user feedback.',
+        'Need a pilot platform to validate your ideas? Our MVP development converts concepts into working prototypes that can be launched quickly and iterated on based on real Los Angeles user feedback.',
+    },
+    {
+      title: 'Mobile App Development',
+      description:
+        'From iOS to Android, we create mobile experiences that capture the innovative spirit of LA. Our apps are built for the fast-paced lifestyle of Angelenos.',
+    },
+    {
+      title: 'Cloud Solutions',
+      description:
+        'Scalable cloud infrastructure designed for LA businesses. We leverage AWS, Azure, and Google Cloud to ensure your applications can handle Hollywood-scale traffic.',
+    },
+    {
+      title: 'AI & Machine Learning',
+      description:
+        'Bringing cutting-edge AI to LA startups and enterprises. From chatbots to predictive analytics, we help businesses stay ahead of the tech curve.',
+    },
+    {
+      title: 'E-commerce Development',
+      description:
+        'Custom e-commerce solutions for LA retailers and brands. We create shopping experiences that convert visitors into loyal customers. Creative energy. Our UI/UX team creates interfaces that are both beautiful and functional for the diverse LA market.',
+    },
+    {
+      title: 'UI/UX Design',
+      description:
+        "Design that reflects LA's creative energy. Our UI/UX team creates interfaces that are both beautiful and functional for the diverse LA market. LA's creative energy. Our UI/UX team creates interfaces that are both beautiful and functional for the diverse LA market.",
     },
   ];
+
+  // InView hooks
+  const headerInView = useInView(headerRef, { once: true, threshold: 0.3 });
+
+  // GSAP Horizontal Scroll Setup
+  useEffect(() => {
+    const section = sectionRef.current;
+    const scrollContainer = scrollContainerRef.current;
+
+    if (!section || !scrollContainer) return;
+
+    // Calculate the total scroll distance
+    const totalScroll = scrollContainer.scrollWidth - section.offsetWidth;
+
+    const ctx = gsap.context(() => {
+      gsap.to(scrollContainer, {
+        x: -totalScroll,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: section,
+          start: 'top top',
+          end: () => `+=${scrollContainer.scrollWidth}`,
+          scrub: 1,
+          pin: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
 
   // Animation variants
   const containerVariants = {
@@ -52,7 +104,32 @@ export default function AgencyLosAngeles() {
     },
   };
 
-  const itemVariants = {
+  const cardVariants = {
+    hidden: {
+      opacity: 0,
+      y: 60,
+      rotateX: 15,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      rotateX: 0,
+      transition: {
+        duration: 0.7,
+        ease: 'easeOut',
+      },
+    },
+    hover: {
+      y: -10,
+      scale: 1.02,
+      transition: {
+        duration: 0.3,
+        ease: 'easeInOut',
+      },
+    },
+  };
+
+  const textRevealVariants = {
     hidden: {
       opacity: 0,
       y: 30,
@@ -61,32 +138,8 @@ export default function AgencyLosAngeles() {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.6,
+        duration: 0.8,
         ease: 'easeOut',
-      },
-    },
-  };
-
-  const cardVariants = {
-    hidden: {
-      opacity: 0,
-      y: 50,
-      scale: 0.95,
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: {
-        duration: 0.7,
-        ease: 'easeOut',
-      },
-    },
-    hover: {
-      y: -8,
-      transition: {
-        duration: 0.2,
-        ease: 'easeInOut',
       },
     },
   };
@@ -94,14 +147,13 @@ export default function AgencyLosAngeles() {
   const buttonVariants = {
     initial: {
       scale: 1,
-      boxShadow: '0 4px 6px -1px rgba(16, 185, 129, 0.3)',
+      boxShadow: '0 4px 20px rgba(79, 209, 197, 0.3)',
     },
     hover: {
       scale: 1.05,
-      boxShadow:
-        '0 20px 25px -5px rgba(16, 185, 129, 0.4), 0 10px 10px -5px rgba(16, 185, 129, 0.2)',
+      boxShadow: '0 8px 30px rgba(79, 209, 197, 0.4)',
       transition: {
-        duration: 0.15,
+        duration: 0.2,
         ease: 'easeInOut',
       },
     },
@@ -114,141 +166,133 @@ export default function AgencyLosAngeles() {
   };
 
   return (
-    <div className="w-full bg-black text-white py-20 px-4 relative overflow-hidden">
-      {/* Animated background elements */}
-      <motion.div
-        className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent"
-        animate={{
-          background: [
-            'linear-gradient(45deg, rgba(16, 185, 129, 0.05) 0%, transparent 100%)',
-            'linear-gradient(225deg, rgba(16, 185, 129, 0.08) 0%, transparent 100%)',
-            'linear-gradient(45deg, rgba(16, 185, 129, 0.05) 0%, transparent 100%)',
-          ],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: 'easeInOut',
-        }}
-      />
-
-      <div className="container mx-auto max-w-7xl relative z-10">
+    <div className="bg-black text-white relative overflow-hidden">
+      {/* Horizontal Scrolling Services Section */}
+      <section ref={sectionRef} className="h-screen overflow-hidden relative">
+        {/* Header Section */}
         <motion.div
-          ref={sectionRef}
+          ref={headerRef}
           initial="hidden"
-          animate={sectionInView ? 'visible' : 'hidden'}
+          animate={headerInView ? 'visible' : 'hidden'}
           variants={containerVariants}
-          className="text-center"
+          className="container mx-auto px-6 pt-20 pb-6 text-center relative z-10"
         >
-          {/* Main Heading */}
           <motion.h1
-            variants={itemVariants}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8 leading-tight tracking-wide"
+            variants={textRevealVariants}
+            className="text-3xl md:text-4xl lg:text-5xl font-[400] font-overcame mb-4 leading-tight"
           >
             <motion.span
-              initial={{ opacity: 0, y: 30 }}
-              animate={sectionInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              initial={{ opacity: 0, y: 50 }}
+              animate={headerInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="block"
             >
               PREMIER WEB DESIGN AND APP
             </motion.span>
-            <br />
             <motion.span
-              initial={{ opacity: 0, y: 30 }}
-              animate={sectionInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.4 }}
+              initial={{ opacity: 0, y: 50 }}
+              animate={headerInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="block"
             >
               DEVELOPMENT AGENCY IN LOS
             </motion.span>
-            <br />
             <motion.span
-              initial={{ opacity: 0, y: 30 }}
-              animate={sectionInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.6 }}
+              initial={{ opacity: 0, y: 50 }}
+              animate={headerInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="block"
             >
               ANGELES
             </motion.span>
           </motion.h1>
 
-          {/* Description */}
           <motion.p
-            variants={itemVariants}
+            variants={textRevealVariants}
             transition={{ delay: 0.8 }}
-            className="text-lg md:text-xl lg:text-2xl text-gray-300 mb-16 max-w-4xl mx-auto leading-relaxed"
+            className="text-lg md:text-xl lg:text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed"
           >
             At Techorphic, we get what it takes to thrive in a city like LA. From the energy of
             Downtown startups to the creative pulse of Santa Monica, our web development solutions
             are built to fit your vibe and your business goals.
           </motion.p>
+        </motion.div>
+        <div
+          ref={scrollContainerRef}
+          className="flex h-fit items-center absolute bottom-10"
+          style={{
+            width: `${services.length * 360}px`, // Card width + gap
+          }}
+        >
+          {services.map((service, index) => (
+            <motion.div
+              key={index}
+              initial="hidden"
+              animate="visible"
+              variants={cardVariants}
+              // whileHover="hover"
+              className="flex-shrink-0 w-[380px]  group mx-4 bg-transparent rounded-2xl border text-[#00FFBC] border-[#00FFBC]"
+              style={{
+                animationDelay: `${index * 0.1}s`,
+              }}
+            >
+              <div className=" rounded-2xl p-8 min-h-[370px] relative overflow-hidden">
+                {/* Card glow effect on hover */}
+                {/* <motion.div className="absolute inset-0 bg-gradient-to-r from-emerald-400/10 to-teal-400/10 " /> */}
 
-          {/* Service Cards */}
-          <motion.div
-            variants={containerVariants}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16"
-          >
-            {services.map((service, index) => (
-              <div
-                key={index}
-                className="relative group"
-                onMouseMove={(e) => handleMouseMove(e, index)}
-                onMouseLeave={handleMouseLeave}
-              >
-                {/* Dynamic mouse-following glow */}
-                {hoveredCard === index && (
-                  <div
-                    className="absolute w-32 h-32 bg-gradient-radial from-emerald-400/40 via-emerald-300/20 to-transparent rounded-full blur-xl opacity-80 pointer-events-none transition-opacity duration-300"
-                    style={{
-                      left: mousePosition.x - 64,
-                      top: mousePosition.y - 64,
-                      background: `radial-gradient(circle, rgba(16, 185, 129, 0.4) 0%, rgba(34, 197, 94, 0.2) 30%, rgba(6, 182, 212, 0.1) 60%, transparent 100%)`,
-                    }}
-                  />
-                )}
-
+                {/* Border gradient on hover */}
                 <motion.div
-                  variants={cardVariants}
-                  whileHover="hover"
-                  className="bg-black border-2 border-emerald-500 rounded-lg p-8 h-full min-h-[300px] flex flex-col justify-start text-left relative overflow-hidden cursor-pointer"
+                  className="absolute inset-0 rounded-2xl opacity-0 "
                   style={{
-                    background:
-                      'linear-gradient(135deg, rgba(0,0,0,0.9) 0%, rgba(16, 185, 129, 0.05) 100%)',
+                    background: 'linear-gradient(45deg, #4FD1C5, #38B2AC, #319795)',
+                    padding: '2px',
+                    margin: '-2px',
                   }}
                 >
+                  <div className="bg-gray-900 rounded-2xl w-full h-full" />
+                </motion.div>
+
+                <div className="relative z-10 h-full flex flex-col">
                   <motion.h3
-                    className="text-xl md:text-2xl font-bold text-emerald-400 mb-6 leading-tight"
-                    transition={{ duration: 0.2 }}
+                    className="text-2xl md:text-3xl font-bold text-[#00FFBC] mb-6 leading-tight"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 + 0.3 }}
                   >
                     {service.title}
                   </motion.h3>
 
                   <motion.p
-                    className="text-gray-300 text-base md:text-lg leading-relaxed"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: index * 0.1 + 0.3 }}
+                    className="text-[#00FFBC] text-base md:text-lg leading-relaxed flex-1"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 + 0.5 }}
                   >
                     {service.description}
                   </motion.p>
-
-                  {/* Subtle corner accent */}
-                  <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-emerald-500/20 to-transparent" />
-                </motion.div>
+                </div>
               </div>
-            ))}
-          </motion.div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
 
-          {/* CTA Button */}
+      {/* Call to Action Section */}
+      <div className="bg-black py-10 relative z-10">
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.8 }}
+          className="text-center"
+        >
           <motion.button
             variants={buttonVariants}
             initial="initial"
             whileHover="hover"
             whileTap="tap"
-            className="bg-emerald-500 hover:bg-emerald-600 text-black font-bold text-lg md:text-xl px-12 py-4 rounded-lg relative overflow-hidden group transition-all duration-300"
+            className="bg-[#00FFBC]  text-black font-[400] cursor-pointer px-12 py-3 rounded-[16px] text-xl relative overflow-hidden"
           >
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-emerald-600 opacity-0 group-hover:opacity-100"
-              transition={{ duration: 0.15 }}
-            />
+            <motion.div className="absolute inset-0" />
             <span className="relative z-10">Get a Free Estimation</span>
           </motion.button>
         </motion.div>

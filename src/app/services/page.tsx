@@ -1,8 +1,4 @@
-import FAQsSection from '@/features/landing/FAQsSection/FAQsSection';
-import Footer from '@/features/landing/footer/footer';
-import FreeAuditForm from '@/features/landing/freeAuditForm/FreeAuditForm';
 import Navbar from '@/features/landing/nav/Navbar';
-import ClientTestimonials from '@/features/landing/testimonials/ClientTestimonials';
 import AgencyLosAngeles from '@/features/services/AgencyLosAngeles';
 import HeroSection from '@/features/services/HeroSection';
 import SolutionsCarousel from '@/features/services/SolutionsCarousel';
@@ -27,10 +23,6 @@ export default function page() {
       <WhyTechorphic />
       <WebDevelopmentProcess />
       <SolutionsCarousel />
-      <ClientTestimonials />
-      <FreeAuditForm />
-      <FAQsSection />
-      <Footer />
     </div>
   );
 }

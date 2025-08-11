@@ -5,6 +5,10 @@ import { useEffect, useState } from 'react';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/features/landing/nav/Navbar';
+import ClientTestimonials from '@/features/landing/testimonials/ClientTestimonials';
+import FreeAuditForm from '@/features/landing/freeAuditForm/FreeAuditForm';
+import FAQsSection from '@/features/landing/FAQsSection/FAQsSection';
+import Footer from '@/features/landing/footer/footer';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -55,6 +59,10 @@ export default function RootLayout({
         </div>
 
         {children}
+        <ClientTestimonials />
+        <FreeAuditForm />
+        <FAQsSection />
+        <Footer />
       </body>
     </html>
   );

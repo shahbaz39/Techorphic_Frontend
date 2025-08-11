@@ -78,6 +78,9 @@ const Navbar = () => {
         <div className="hidden lg:block flex-shrink-0">
           <Link href="/contact">
             <LETSDISCUSS />
+            {/* <button className="font-overcame bg-black rounded-md text-white font-bold pt-2 px-5">
+              let&apos;s discuss
+            </button> */}
           </Link>
         </div>
 

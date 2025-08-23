@@ -175,11 +175,11 @@ export default function AgencyLosAngeles() {
           initial="hidden"
           animate={headerInView ? 'visible' : 'hidden'}
           variants={containerVariants}
-          className="container mx-auto px-6 pt-20 pb-6 text-center relative z-10"
+          className="container mx-auto px-6 pb-6 text-center relative z-10"
         >
           <motion.h1
             variants={textRevealVariants}
-            className="text-3xl md:text-4xl lg:text-5xl font-[400] font-overcame mb-4 leading-tight"
+            className="text-3xl md:text-4xl lg:text-5xl font-[400] font-overcame mb-4 "
           >
             <motion.span
               initial={{ opacity: 0, y: 50 }}
@@ -210,7 +210,7 @@ export default function AgencyLosAngeles() {
           <motion.p
             variants={textRevealVariants}
             transition={{ delay: 0.8 }}
-            className="text-lg md:text-xl lg:text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed"
+            className="text-lg md:text-xl lg:text-xl text-gray-300 max-w-5xl mx-auto leading-relaxed"
           >
             At Techorphic, we get what it takes to thrive in a city like LA. From the energy of
             Downtown startups to the creative pulse of Santa Monica, our web development solutions
@@ -219,7 +219,7 @@ export default function AgencyLosAngeles() {
         </motion.div>
         <div
           ref={scrollContainerRef}
-          className="flex h-fit items-center absolute bottom-10"
+          className="flex h-fit items-center absolute bottom-1"
           style={{
             width: `${services.length * 360}px`, // Card width + gap
           }}

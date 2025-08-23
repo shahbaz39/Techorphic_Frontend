@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef, useState, useEffect, useCallback } from 'react';
 import React from 'react';
+import { Variants } from 'framer-motion';
 
 const HeroSection = () => {
   const containerVariants = {
@@ -15,22 +16,22 @@ const HeroSection = () => {
       },
     },
   };
-  const caseStudyVariants = {
-    hidden: {
-      opacity: 0,
-      scale: 0.8,
-      y: 40,
+const caseStudyVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    scale: 0.8,
+    y: 40,
+  },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: "easeOut" as const, // 👈 tell TS this is the literal value
     },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: 'easeOut',
-      },
-    },
-  };
+  },
+};
   const caseStudies = [
     {
       title: 'Skip Tracing Platform Development',

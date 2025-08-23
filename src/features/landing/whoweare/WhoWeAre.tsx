@@ -2,9 +2,17 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 
-// Mock FocusedAreasCards component
+interface WhoWeAreProps {
+  data: {
+    title?: string;
+    first_paragraph?: string;
+    middle_paragraph?: string;
+    second_paragraph?: string;
+    final_paragraph?: string;
+  };
+}
 
-export default function WhoWeAre() {
+export default function WhoWeAre({ data }: WhoWeAreProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: false, amount: 0.1 });
 
@@ -80,11 +88,11 @@ export default function WhoWeAre() {
             animate={isInView ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: -50, scale: 0.9 }}
             transition={{ duration: 0.8, ease: 'easeOut' }}
           >
-            Who We Are
+            {data?.title || 'Who We Are'}
           </motion.h1>
 
           <div className="flex flex-col items-center justify-center space-y-6 sm:space-y-8 mt-6 sm:mt-8 lg:mt-10">
-            {/* First content block with animated brackets */}
+            {/* First content block */}
             <div className="grid grid-cols-1 lg:grid-cols-[55%_45%] items-center justify-between gap-6 lg:gap-8 w-full">
               <motion.p
                 className="leading-[130%] tracking-[-0.017em] py-6 sm:py-8 lg:py-10 order-2 lg:order-1"
@@ -95,12 +103,10 @@ export default function WhoWeAre() {
                 variants={slideInLeft}
                 transition={{ delay: 0.2 }}
               >
-                At Techorphic, we deeply understand end-user needs. For example, if most of your
-                business users are on mobile, we ensure your website is mobile-friendly, fast, and
-                optimized for short attention spans. This user-focused approach means we don&apos;t
-                just build apps; we build results.
+                {data?.first_paragraph}
               </motion.p>
 
+              {/* Floating brackets */}
               <motion.div
                 className="gap-8 sm:gap-12 lg:gap-20 justify-center hidden md:flex text-[#00FFBC] order-1 lg:order-2"
                 initial="hidden"
@@ -111,10 +117,7 @@ export default function WhoWeAre() {
               >
                 <motion.span
                   className="translate-y-2 sm:translate-y-4 lg:translate-y-10 inline-block"
-                  style={{
-                    fontSize: 'clamp(80px, 15vw, 256px)',
-                    // filter: 'drop-shadow(0 0 20px rgba(0, 255, 188, 0.6))',
-                  }}
+                  style={{ fontSize: 'clamp(80px, 15vw, 256px)' }}
                   variants={bracketFloat}
                   animate="animate"
                 >
@@ -122,10 +125,7 @@ export default function WhoWeAre() {
                 </motion.span>
                 <motion.span
                   className="-translate-y-8 sm:-translate-y-16 lg:-translate-y-30 inline-block"
-                  style={{
-                    fontSize: 'clamp(80px, 15vw, 256px)',
-                    // filter: 'drop-shadow(0 0 20px rgba(0, 255, 188, 0.6))',
-                  }}
+                  style={{ fontSize: 'clamp(80px, 15vw, 256px)' }}
                   variants={bracketFloatReverse}
                   animate="animate"
                 >
@@ -144,11 +144,10 @@ export default function WhoWeAre() {
               variants={fadeInUp}
               transition={{ delay: 0.3 }}
             >
-              With over 30 expert developers on board, we deliver fast, help businesses grow, and
-              boost digital visibility in a shorter time.
+              {data?.middle_paragraph}
             </motion.p>
 
-            {/* Second content block with animated brackets */}
+            {/* Second content block */}
             <div className="grid grid-cols-1 lg:grid-cols-[45%_55%] items-center justify-between gap-6 lg:gap-8 w-full">
               <motion.div
                 className="md:flex hidden gap-8 sm:gap-12 lg:gap-20 justify-center text-[#00FFBC] order-1"
@@ -160,10 +159,7 @@ export default function WhoWeAre() {
               >
                 <motion.span
                   className="translate-y-2 sm:translate-y-4 lg:translate-y-10 inline-block"
-                  style={{
-                    fontSize: 'clamp(80px, 15vw, 256px)',
-                    // filter: 'drop-shadow(0 0 20px rgba(0, 255, 188, 0.6))',
-                  }}
+                  style={{ fontSize: 'clamp(80px, 15vw, 256px)' }}
                   variants={bracketFloat}
                   animate="animate"
                 >
@@ -171,10 +167,7 @@ export default function WhoWeAre() {
                 </motion.span>
                 <motion.span
                   className="-translate-y-8 sm:-translate-y-16 lg:-translate-y-30 inline-block"
-                  style={{
-                    fontSize: 'clamp(80px, 15vw, 256px)',
-                    // filter: 'drop-shadow(0 0 20px rgba(0, 255, 188, 0.6))',
-                  }}
+                  style={{ fontSize: 'clamp(80px, 15vw, 256px)' }}
                   variants={bracketFloatReverse}
                   animate="animate"
                 >
@@ -191,9 +184,7 @@ export default function WhoWeAre() {
                 variants={slideInRight}
                 transition={{ delay: 0.4 }}
               >
-                The digital world is now more powerful than the physical one—and we help you realize
-                your full value in it by building modern applications designed around user
-                psychology.
+                {data?.second_paragraph}
               </motion.p>
             </div>
 
@@ -207,8 +198,7 @@ export default function WhoWeAre() {
               variants={fadeInUp}
               transition={{ delay: 0.2 }}
             >
-              And since digital disruption never stops, we&apos;re here for the long haul—keeping
-              your technology up to date and future-ready.
+              {data?.final_paragraph}
             </motion.div>
           </div>
         </div>

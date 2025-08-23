@@ -2,7 +2,57 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-const HeroSection = () => {
+interface Technology {
+  id: number;
+  name: string;
+  icon: {
+    url?: string;
+    alternativeText?: string;
+    data?: {
+      attributes: {
+        url: string;
+        alternativeText?: string;
+      };
+    };
+  };
+}
+
+interface CTAButton {
+  id: number;
+  label: string;
+  url: string;
+  is_highlighted: boolean;
+}
+
+interface HeroSectionProps {
+  title?: string;
+  subtitle?: string;
+  description?: any;
+  technologies?: Technology[];
+  ctaButtons?: CTAButton[];
+}
+
+const HeroSection: React.FC<HeroSectionProps> = ({
+  title = '',
+  subtitle,
+  description,
+  technologies = [],
+  ctaButtons = [],
+}) => {
+  // Convert rich text to plain text
+  const getPlainText = (richText: any) => {
+    if (!richText) return '';
+    if (typeof richText === 'string') return richText;
+    if (Array.isArray(richText)) {
+      return richText
+        .map((block: any) => block.children?.map((child: any) => child.text).join(''))
+        .join(' ');
+    }
+    return '';
+  };
+
+  const descriptionText = getPlainText(description) || '';
+
   return (
     <section className="w-full px-6 py-16 pb-[8rem]">
       <div className="max-w-7xl mx-auto">
@@ -11,25 +61,18 @@ const HeroSection = () => {
           {/* Left Column - Main Heading */}
           <div className="w-[50%]">
             <h1
-              className="font-normal leading-[80px] md:text-[68px] text-[40px] hidden md:block tracking-[-0.017em] text-[#020209]"
+              className="font-normal leading-[80px] md:text-[68px] text-[40px] hidden md:block tracking-[-0.017em] text-[#020209] max-w-[460px]"
               style={{
                 fontFamily: 'Overcame Demo, system-ui, -apple-system, sans-serif',
                 textShadow: '4px 4px 4px rgba(0, 0, 0, 0.25)',
                 verticalAlign: 'middle',
               }}
             >
-              BUILDING
-              <br />
-              SOFTWARE
-              <br />
-              THAT FITS
-              <br />
-              YOUR BUSINESS
-              <br />
-              GOALS
+              {title}
             </h1>
           </div>
 
+          {/* Mobile title */}
           <p
             className="block md:hidden text-5xl"
             style={{
@@ -38,102 +81,85 @@ const HeroSection = () => {
               verticalAlign: 'middle',
             }}
           >
-            {' '}
-            BUILDING SOFTWARE THAT FITS YOUR BUSINESS GOALS
+            {title.replace(/\n/g, ' ')}
           </p>
 
           {/* Right Column - Description */}
           <div className="flex items-end md:justify-end transform md:-translate-y-13">
             <div className="md:w-[35%]">
               <p
-                className="font-normal leading-[110%] md:text-[40px] text-[30px] mt-3.5 md:mt-0  tracking-[-0.017em] text-[#030208] md:text-right"
+                className="font-normal leading-[110%] md:text-[40px] text-[30px] mt-3.5 md:mt-0 tracking-[-0.017em] text-[#030208] md:text-right"
                 style={{
                   fontFamily: 'Montserrat, system-ui, -apple-system, sans-serif',
                   verticalAlign: 'middle',
                 }}
               >
-                We build software that supports your business goals by giving you better visibility,
-                smoother collaboration, and higher productivity.
+                {descriptionText}
               </p>
             </div>
           </div>
         </div>
 
         {/* Technology Icons */}
-        <div className="mb-16 md:w-[50%] mt-10 md:mt-0">
-          <div className="grid grid-cols-8">
-            {/* Laravel */}
-            <div className="flex items-center justify-center">
-              <Image src="/laravel.svg" alt="laravel" width={70} height={70} />
+        {technologies.length > 0 && (
+          <div className="mb-16 md:w-[50%] mt-10 md:mt-0">
+            <div className="grid grid-cols-8">
+              {technologies.slice(0, 8).map((tech) => {
+                const iconUrl = tech.icon?.url
+                  ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${tech.icon.url}`
+                  : tech.icon?.data?.attributes?.url
+                    ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${tech.icon.data.attributes.url}`
+                    : null;
+
+                return (
+                  <div key={tech.id} className="flex items-center justify-center">
+                    {iconUrl && (
+                      <Image
+                        src={iconUrl}
+                        alt={
+                          tech.icon?.alternativeText ||
+                          tech.icon?.data?.attributes?.alternativeText ||
+                          tech.name
+                        }
+                        width={20}
+                        height={20}
+                        className="object-contain"
+                      />
+                    )}
+                  </div>
+                );
+              })}
             </div>
 
-            {/* Django - with orange circle */}
-            <div className="flex items-center justify-center">
-              <Image src="/vector.svg" alt="vector" width={30} height={30} />
-            </div>
+            <div className="grid grid-cols-8 mt-4">
+              {technologies.slice(8, 16).map((tech) => {
+                const iconUrl = tech.icon?.url
+                  ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${tech.icon.url}`
+                  : tech.icon?.data?.attributes?.url
+                    ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${tech.icon.data.attributes.url}`
+                    : null;
 
-            {/* Blockchain */}
-            <div className="flex items-center justify-center text-gray-600">
-              <Image src="/java.svg" alt="java" width={20} height={20} />
+                return (
+                  <div key={tech.id} className="flex items-center justify-center">
+                    {iconUrl && (
+                      <Image
+                        src={iconUrl}
+                        alt={
+                          tech.icon?.alternativeText ||
+                          tech.icon?.data?.attributes?.alternativeText ||
+                          tech.name
+                        }
+                        width={30}
+                        height={30}
+                        className="object-contain"
+                      />
+                    )}
+                  </div>
+                );
+              })}
             </div>
-
-            {/* React */}
-            <div className="flex items-center justify-center text-gray-600">
-              <Image src="/blockchain.svg" alt="blockchain" width={80} height={80} />
-            </div>
-
-            {/* Node.js */}
-            <div className="flex items-center justify-center text-gray-600">
-              <Image src="/react.svg" alt="react" width={30} height={30} />
-            </div>
-            <div className="flex items-center justify-center text-gray-600">
-              <Image src="/rails.svg" alt="rails" width={30} height={30} />
-            </div>
-            <div className="flex items-center justify-center text-gray-600">
-              <Image src="/nodejs.svg" alt="nodejs" width={30} height={30} />
-            </div>
-
-            {/* Second Row */}
           </div>
-          <div className="grid grid-cols-8 mt-4">
-            {/* Python */}
-            <div className="flex items-center  text-gray-600">
-              <Image src="/python.svg" alt="python" width={30} height={30} />
-            </div>
-
-            {/* Android */}
-            <div className="flex items-center justify-center text-gray-600">
-              <Image src="/android.svg" alt="android" width={30} height={30} />
-            </div>
-
-            {/* Apple */}
-            <div className="flex items-center justify-center text-gray-600">
-              <Image src="/apple.svg" alt="apple" width={30} height={30} />
-            </div>
-
-            {/* Microsoft */}
-            <div className="flex items-center justify-center text-gray-600">
-              <Image src="/windows.svg" alt="windows" width={30} height={30} />
-            </div>
-
-            {/* Other tools */}
-            <div className="flex items-center justify-center text-gray-600">
-              <Image src="/d.svg" alt="d" width={18} height={18} />
-            </div>
-
-            <div className="flex items-center justify-center text-gray-600">
-              <Image src="/j.svg" alt="j" width={13} height={13} />
-            </div>
-
-            <div className="flex items-center justify-center text-gray-600">
-              <Image src="/php.svg" alt="php" width={30} height={30} />
-            </div>
-
-            {/* <div className="flex items-center justify-center text-gray-600">
-              <Image src="/cloud.svg" alt="cloud" width={30} height={30} />
-            </div> */}
-          </div>
-        </div>
+        )}
 
         {/* Bottom Content */}
         <div className="space-y-12">
@@ -143,28 +169,31 @@ const HeroSection = () => {
             exceptional experience.
           </p>
 
-          {/* Description */}
-          <p className="font-[300]  md:text-[36px] text-[30px] leading-[110%] tracking-[-1.7%] max-w-5xl">
-            Techorphic’s software development services deliver scalable, intuitive solutions like
+          {/* Static description */}
+          <p className="font-[300] md:text-[36px] text-[30px] leading-[110%] tracking-[-1.7%] max-w-5xl">
+            Techorphic's software development services deliver scalable, intuitive solutions like
             apps processing over 1M payments monthly and tools speeding up healthcare signups by
             40%. We&#39;re your success partner.
           </p>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 pt-8">
-            <Link
-              href="/services"
-              className="bg-[#00FFBC] text-[#000000] px-5 h-11 items-center justify-between flex rounded-md font-bold text-center"
-            >
-              Our Services
-            </Link>
-            <Link
-              href="/estimate"
-              className="bg-[#000000] text-[#fff] px-5 h-11 items-center justify-between flex rounded-md font-bold text-center"
-            >
-              Get a Free Estimation
-            </Link>
-          </div>
+          {ctaButtons.length > 0 && (
+            <div className="flex flex-col sm:flex-row gap-4 pt-8">
+              {ctaButtons.map((button) => (
+                <Link
+                  key={button.id}
+                  href={button.url}
+                  className={`${
+                    button.is_highlighted
+                      ? 'bg-[#000000] text-[#fff]'
+                      : 'bg-[#00FFBC] text-[#000000]'
+                  } px-5 h-11 items-center justify-between flex rounded-md font-bold text-center`}
+                >
+                  {button.label}
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </section>

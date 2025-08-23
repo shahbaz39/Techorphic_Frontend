@@ -8,7 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function DeepCurveCardChain() {
   const sectionRef = useRef(null);
-  const cardsRef = useRef<HTMLDivElement[]>([]);
+  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -65,7 +65,9 @@ export default function DeepCurveCardChain() {
         {[...Array(4)].map((_, i) => (
           <div
             key={i}
-            ref={(el) => (cardsRef.current[i] = el!)}
+            ref={(el) => {
+              cardsRef.current[i] = el;
+            }}
             className="absolute bg-white text-black rounded-xl p-8 shadow-xl w-[140px] h-[180px] flex items-center justify-center text-xl font-semibold"
           >
             Card {i + 1}

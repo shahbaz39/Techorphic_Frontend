@@ -1,187 +1,119 @@
-'use client';
-import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { useInView } from 'framer-motion';
-import { useRef, useEffect } from 'react';
-import gsap from 'gsap';
-import ScrollTrigger from 'gsap/ScrollTrigger';
+"use client"
+import Link from "next/link"
+import { motion } from "framer-motion"
+import { useInView } from "framer-motion"
+import { useRef, useEffect } from "react"
+import gsap from "gsap"
+import ScrollTrigger from "gsap/ScrollTrigger"
 
 // Register GSAP plugin
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger)
 }
 
-export default function ServicesOverview() {
+interface ServicesOverviewProps {
+  data: {
+    title: string
+    subtitle: string
+    cta_title: string
+    cta_description: string
+    cta_button: string
+    ServicesCategory: Array<{
+      id: number
+      category_title: string
+      servicename: Array<{
+        id: number
+        name: string // Fixed property name from service_name to name to match API data
+      }>
+    }>
+  }
+}
+
+export default function ServicesOverview({ data }: ServicesOverviewProps) {
+  const { title, subtitle, cta_title, cta_description, cta_button, ServicesCategory } = data
+
   // Refs for GSAP
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null)
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
 
   // Other refs
-  const headerRef = useRef(null);
-  const caseStudiesRef = useRef(null);
-  const ctaRef = useRef(null);
+  const headerRef = useRef(null)
+  const caseStudiesRef = useRef(null)
+  const ctaRef = useRef(null)
 
   // Dynamic rotation logic
   const getCardRotation = (index: number) => {
     // Pattern: -rotate-2, rotate-2, -rotate-2, rotate-2, ...
-    return index % 2 === 0 ? '-rotate-2' : 'rotate-2';
-  };
+    return index % 2 === 0 ? "-rotate-2" : "rotate-2"
+  }
 
-  // Services data
-  const services = [
-    {
-      title: 'Web Development',
-      items: [
-        'React & Next.js Applications',
-        'Vue.js Development',
-        'Full-Stack Solutions',
-        'Progressive Web Apps',
-        'E-commerce Platforms',
-      ],
-    },
-    {
-      title: 'Mobile Development',
-      items: [
-        'iOS App Development',
-        'Android Development',
-        'React Native Solutions',
-        'Flutter Applications',
-        'Cross-Platform Apps',
-      ],
-    },
-    {
-      title: 'Cloud Solutions',
-      items: [
-        'AWS Integration',
-        'Azure Services',
-        'Google Cloud Platform',
-        'Serverless Architecture',
-        'Cloud Migration',
-      ],
-    },
-    {
-      title: 'AI & Machine Learning',
-      items: [
-        'Natural Language Processing',
-        'Computer Vision',
-        'Predictive Analytics',
-        'Chatbot Development',
-        'Data Science Solutions',
-      ],
-    },
-    {
-      title: 'Blockchain & Web3',
-      items: [
-        'Smart Contract Development',
-        'DeFi Applications',
-        'NFT Marketplaces',
-        'Cryptocurrency Solutions',
-        'Web3 Integration',
-      ],
-    },
-    {
-      title: 'DevOps & Infrastructure',
-      items: [
-        'CI/CD Pipeline Setup',
-        'Docker Containerization',
-        'Kubernetes Orchestration',
-        'Infrastructure as Code',
-        'Monitoring & Analytics',
-      ],
-    },
-    {
-      title: 'UI/UX Design',
-      items: [
-        'User Interface Design',
-        'User Experience Research',
-        'Prototyping & Wireframing',
-        'Design Systems',
-        'Mobile App Design',
-      ],
-    },
-    {
-      title: 'Quality Assurance',
-      items: [
-        'Automated Testing',
-        'Manual Testing',
-        'Performance Testing',
-        'Security Testing',
-        'Continuous Integration',
-      ],
-    },
-    {
-      title: 'Data Analytics',
-      items: [
-        'Business Intelligence',
-        'Data Visualization',
-        'Big Data Processing',
-        'Real-time Analytics',
-        'Data Warehousing',
-      ],
-    },
-  ];
+  const services =
+    ServicesCategory?.map((category) => ({
+      title: category.category_title,
+      items: category.servicename?.map((service) => service.name.replace(/\n+/g, "").trim()) || [], // Fixed property access and cleaned up newline characters
+    })) || []
 
   const caseStudies = [
     {
-      title: 'Skip Tracing Platform Development',
-      size: 'large',
-      imageUrl: '/placeholder.svg?height=400&width=700',
+      title: "Skip Tracing Platform Development",
+      size: "large",
+      imageUrl: "/placeholder.svg?height=400&width=700",
     },
     {
-      title: 'Skip Tracing Platform',
-      size: 'small',
-      imageUrl: '/placeholder.svg?height=300&width=350',
+      title: "Skip Tracing Platform",
+      size: "small",
+      imageUrl: "/placeholder.svg?height=300&width=350",
     },
     {
-      title: 'Branding',
-      size: 'small',
-      imageUrl: '/placeholder.svg?height=300&width=350',
+      title: "Branding",
+      size: "small",
+      imageUrl: "/placeholder.svg?height=300&width=350",
     },
     {
-      title: 'Skip Tracing Platform',
-      size: 'custom-60',
-      imageUrl: '/placeholder.svg?height=300&width=420',
+      title: "Skip Tracing Platform",
+      size: "custom-60",
+      imageUrl: "/placeholder.svg?height=300&width=420",
     },
     {
-      title: 'Branding',
-      size: 'custom-40',
-      imageUrl: '/placeholder.svg?height=300&width=280',
+      title: "Branding",
+      size: "custom-40",
+      imageUrl: "/placeholder.svg?height=300&width=280",
     },
-  ];
+  ]
 
   // InView hooks
-  const headerInView = useInView(headerRef, { once: true, threshold: 0.3 });
-  const caseStudiesInView = useInView(caseStudiesRef, { once: true, threshold: 0.1 });
-  const ctaInView = useInView(ctaRef, { once: true, threshold: 0.3 });
+  const headerInView = useInView(headerRef, { once: true, threshold: 0.3 })
+  const caseStudiesInView = useInView(caseStudiesRef, { once: true, threshold: 0.1 })
+  const ctaInView = useInView(ctaRef, { once: true, threshold: 0.3 })
 
   // GSAP Horizontal Scroll Setup
   useEffect(() => {
-    const section = sectionRef.current;
-    const scrollContainer = scrollContainerRef.current;
+    const section = sectionRef.current
+    const scrollContainer = scrollContainerRef.current
 
-    if (!section || !scrollContainer) return;
+    if (!section || !scrollContainer) return
 
     // Calculate the total scroll distance
-    const totalScroll = scrollContainer.scrollWidth - section.offsetWidth;
+    const totalScroll = scrollContainer.scrollWidth - section.offsetWidth
 
     const ctx = gsap.context(() => {
       gsap.to(scrollContainer, {
         x: -totalScroll,
-        ease: 'none',
+        ease: "none",
         scrollTrigger: {
           trigger: section,
-          start: 'top top',
+          start: "top top",
           end: () => `+=${scrollContainer.scrollWidth}`,
           scrub: 1,
           pin: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,
         },
-      });
-    }, sectionRef);
+      })
+    }, sectionRef)
 
-    return () => ctx.revert();
-  }, []);
+    return () => ctx.revert()
+  }, [])
 
   // Animation variants
   const containerVariants = {
@@ -193,7 +125,7 @@ export default function ServicesOverview() {
         delayChildren: 0.1,
       },
     },
-  };
+  }
 
   const itemVariants = {
     hidden: {
@@ -207,10 +139,10 @@ export default function ServicesOverview() {
       scale: 1,
       transition: {
         duration: 0.6,
-        ease: 'easeOut',
+        ease: "easeOut" as const, // ✅ TS now sees it as a literal
       },
     },
-  };
+  }
 
   const cardVariants = {
     hidden: {
@@ -224,11 +156,11 @@ export default function ServicesOverview() {
       rotateX: 0,
       transition: {
         duration: 0.7,
-        ease: 'easeOut',
+        ease: "easeOut",
       },
     },
     hover: {},
-  };
+  }
 
   const caseStudyVariants = {
     hidden: {
@@ -242,10 +174,10 @@ export default function ServicesOverview() {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: 'easeOut',
+        ease: "easeOut",
       },
     },
-  };
+  }
 
   const textRevealVariants = {
     hidden: {
@@ -257,22 +189,22 @@ export default function ServicesOverview() {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: 'easeOut',
+        ease: "easeOut",
       },
     },
-  };
+  }
 
   const buttonVariants = {
     initial: {
       scale: 1,
-      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+      boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
     },
     hover: {
       scale: 1.05,
-      boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+      boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
       transition: {
         duration: 0.15,
-        ease: 'easeInOut',
+        ease: "easeInOut",
       },
     },
     tap: {
@@ -281,16 +213,11 @@ export default function ServicesOverview() {
         duration: 0.1,
       },
     },
-  };
+  }
 
   return (
-    <div
-      className="w-full bg-cover bg-center relative "
-      style={{ backgroundImage: "url('/hero-bg-2.svg')" }}
-    >
+    <div className="w-full bg-cover bg-center relative " style={{ backgroundImage: "url('/hero-bg-2.svg')" }}>
       {/* Animated background elements */}
-
-      {/* Header Section */}
 
       {/* GSAP Horizontal Scrolling Service Cards Section */}
       <section
@@ -298,47 +225,39 @@ export default function ServicesOverview() {
         className="h-screen  overflow-hidden relative -mt-8 bg-transparent"
         style={{ backgroundImage: "url('/hero-bg-2.svg')" }}
       >
-        {' '}
+        {" "}
         <div className="container mx-auto px-4 pt-20 relative z-10">
           <motion.div
             ref={headerRef}
             initial="hidden"
-            animate={headerInView ? 'visible' : 'hidden'}
+            animate={headerInView ? "visible" : "hidden"}
             variants={containerVariants}
             className="text-center"
           >
             <motion.h2
               variants={textRevealVariants}
-              className="text-4xl md:text-5xl font-overcame font-bold mb-8 text-gray-800"
+              className=" mx-auto max-w-[700px] text-4xl md:text-5xl font-overcame font-bold mb-8 text-gray-800"
             >
               <motion.span
                 initial={{ opacity: 0, y: 30 }}
                 animate={headerInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.6, delay: 0.2 }}
               >
-                Overview of Core Services
-              </motion.span>
-              <br />
-              <motion.span
-                initial={{ opacity: 0, y: 30 }}
-                animate={headerInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: 0.4 }}
-              >
-                and Solutions
+                {title}
               </motion.span>
             </motion.h2>
             <motion.p
               variants={textRevealVariants}
               transition={{ delay: 0.6 }}
-              className="font-[400] text-xl md:text-2xl text-gray-700"
+              className="mx-auto max-w-[400px] font-[400] text-xl md:text-2xl text-gray-700"
             >
-              Our Core Software <br /> Development Services
+              {subtitle}
             </motion.p>
           </motion.div>
         </div>
         <div
           ref={scrollContainerRef}
-          className="flex h-fit items-center absolute bottom-10"
+          className="flex h-fit items-center absolute mt-5"
           style={{
             width: `${services.length * 350}px`, // Card width + gap
           }}
@@ -404,14 +323,14 @@ export default function ServicesOverview() {
           <motion.div
             ref={ctaRef}
             initial="hidden"
-            animate={ctaInView ? 'visible' : 'hidden'}
+            animate={ctaInView ? "visible" : "hidden"}
             variants={containerVariants}
             className="flex flex-col lg:flex-row items-center justify-between max-w-6xl mx-auto mb-16"
             style={{ backgroundImage: "url('/hero-bg-2.svg')" }}
           >
             <motion.div variants={itemVariants} className="text-center lg:text-left mb-6 lg:mb-0">
-              <p className="text-2xl md:text-3xl text-gray-700">Have a project in mind?</p>
-              <p className="text-2xl md:text-3xl text-gray-700">Let&#39;s shape it together</p>
+              <p className="text-2xl md:text-3xl text-gray-700">{cta_title}</p>
+              <p className="text-2xl md:text-3xl text-gray-700">{cta_description}</p>
             </motion.div>
             <motion.button
               variants={buttonVariants}
@@ -421,7 +340,7 @@ export default function ServicesOverview() {
               className="bg-black text-white px-12 py-3 rounded-md text-xl relative overflow-hidden group"
             >
               <motion.div className="absolute inset-0" transition={{ duration: 0.15 }} />
-              <span className="relative z-10">Get a Free Estimation</span>
+              <span className="relative z-10">{cta_button}</span>
             </motion.button>
           </motion.div>
 
@@ -429,7 +348,7 @@ export default function ServicesOverview() {
           <motion.div
             ref={caseStudiesRef}
             initial="hidden"
-            animate={caseStudiesInView ? 'visible' : 'hidden'}
+            animate={caseStudiesInView ? "visible" : "hidden"}
             variants={containerVariants}
             // style={{ backgroundImage: "url('/hero-bg-2.svg')" }}
           >
@@ -457,15 +376,15 @@ export default function ServicesOverview() {
                   className={`
                   rounded-xl p-6 flex flex-col justify-end relative border bg-[#D9D9D9] overflow-hidden
                   bg-gradient-to-br from-gray-200 to-gray-300
-                  ${study.size === 'large' ? 'md:col-span-10 h-[300px] md:h-[400px]' : ''}
-                  ${study.size === 'small' ? 'md:col-span-5 h-[200px] md:h-[300px]' : ''}
-                  ${study.size === 'custom-60' ? 'md:col-span-6 h-[200px] md:h-[300px]' : ''}
-                  ${study.size === 'custom-40' ? 'md:col-span-4 h-[200px] md:h-[300px]' : ''}
+                  ${study.size === "large" ? "md:col-span-10 h-[300px] md:h-[400px]" : ""}
+                  ${study.size === "small" ? "md:col-span-5 h-[200px] md:h-[300px]" : ""}
+                  ${study.size === "custom-60" ? "md:col-span-6 h-[200px] md:h-[300px]" : ""}
+                  ${study.size === "custom-40" ? "md:col-span-4 h-[200px] md:h-[300px]" : ""}
                 `}
                   style={{
                     backgroundImage: `url('${study.imageUrl}')`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
                   }}
                 >
                   <div className="relative z-10">
@@ -477,12 +396,8 @@ export default function ServicesOverview() {
 
             {/* Bottom text and link */}
             <motion.div variants={itemVariants} className="text-center">
-              <motion.p
-                className="text-xl md:text-2xl text-gray-700 mb-4"
-                variants={textRevealVariants}
-              >
-                We take your business as our personal <br /> and deliver more than beyond the
-                boundaries
+              <motion.p className="text-xl md:text-2xl text-gray-700 mb-4" variants={textRevealVariants}>
+                We take your business as our personal <br /> and deliver more than beyond the boundaries
               </motion.p>
               <motion.div whileTap={{ scale: 0.95 }}>
                 <Link
@@ -497,5 +412,5 @@ export default function ServicesOverview() {
         </div>
       </div>
     </div>
-  );
+  )
 }

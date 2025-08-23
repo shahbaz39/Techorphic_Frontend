@@ -1,119 +1,119 @@
-"use client"
-import Link from "next/link"
-import { motion } from "framer-motion"
-import { useInView } from "framer-motion"
-import { useRef, useEffect } from "react"
-import gsap from "gsap"
-import ScrollTrigger from "gsap/ScrollTrigger"
+'use client';
+import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { useInView } from 'framer-motion';
+import { useRef, useEffect } from 'react';
+import gsap from 'gsap';
+import ScrollTrigger from 'gsap/ScrollTrigger';
 
 // Register GSAP plugin
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger)
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
 }
 
 interface ServicesOverviewProps {
   data: {
-    title: string
-    subtitle: string
-    cta_title: string
-    cta_description: string
-    cta_button: string
+    title: string;
+    subtitle: string;
+    cta_title: string;
+    cta_description: string;
+    cta_button: string;
     ServicesCategory: Array<{
-      id: number
-      category_title: string
+      id: number;
+      category_title: string;
       servicename: Array<{
-        id: number
-        name: string // Fixed property name from service_name to name to match API data
-      }>
-    }>
-  }
+        id: number;
+        name: string; // Fixed property name from service_name to name to match API data
+      }>;
+    }>;
+  };
 }
 
 export default function ServicesOverview({ data }: ServicesOverviewProps) {
-  const { title, subtitle, cta_title, cta_description, cta_button, ServicesCategory } = data
+  const { title, subtitle, cta_title, cta_description, cta_button, ServicesCategory } = data;
 
   // Refs for GSAP
-  const sectionRef = useRef<HTMLDivElement>(null)
-  const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Other refs
-  const headerRef = useRef(null)
-  const caseStudiesRef = useRef(null)
-  const ctaRef = useRef(null)
+  const headerRef = useRef(null);
+  const caseStudiesRef = useRef(null);
+  const ctaRef = useRef(null);
 
   // Dynamic rotation logic
   const getCardRotation = (index: number) => {
     // Pattern: -rotate-2, rotate-2, -rotate-2, rotate-2, ...
-    return index % 2 === 0 ? "-rotate-2" : "rotate-2"
-  }
+    return index % 2 === 0 ? '-rotate-2' : 'rotate-2';
+  };
 
   const services =
     ServicesCategory?.map((category) => ({
       title: category.category_title,
-      items: category.servicename?.map((service) => service.name.replace(/\n+/g, "").trim()) || [], // Fixed property access and cleaned up newline characters
-    })) || []
+      items: category.servicename?.map((service) => service.name.replace(/\n+/g, '').trim()) || [], // Fixed property access and cleaned up newline characters
+    })) || [];
 
   const caseStudies = [
     {
-      title: "Skip Tracing Platform Development",
-      size: "large",
-      imageUrl: "/placeholder.svg?height=400&width=700",
+      title: 'Skip Tracing Platform Development',
+      size: 'large',
+      imageUrl: '/placeholder.svg?height=400&width=700',
     },
     {
-      title: "Skip Tracing Platform",
-      size: "small",
-      imageUrl: "/placeholder.svg?height=300&width=350",
+      title: 'Skip Tracing Platform',
+      size: 'small',
+      imageUrl: '/placeholder.svg?height=300&width=350',
     },
     {
-      title: "Branding",
-      size: "small",
-      imageUrl: "/placeholder.svg?height=300&width=350",
+      title: 'Branding',
+      size: 'small',
+      imageUrl: '/placeholder.svg?height=300&width=350',
     },
     {
-      title: "Skip Tracing Platform",
-      size: "custom-60",
-      imageUrl: "/placeholder.svg?height=300&width=420",
+      title: 'Skip Tracing Platform',
+      size: 'custom-60',
+      imageUrl: '/placeholder.svg?height=300&width=420',
     },
     {
-      title: "Branding",
-      size: "custom-40",
-      imageUrl: "/placeholder.svg?height=300&width=280",
+      title: 'Branding',
+      size: 'custom-40',
+      imageUrl: '/placeholder.svg?height=300&width=280',
     },
-  ]
+  ];
 
   // InView hooks
-  const headerInView = useInView(headerRef, { once: true, threshold: 0.3 })
-  const caseStudiesInView = useInView(caseStudiesRef, { once: true, threshold: 0.1 })
-  const ctaInView = useInView(ctaRef, { once: true, threshold: 0.3 })
+  const headerInView = useInView(headerRef, { once: true, amount: 0.3 });
+  const caseStudiesInView = useInView(caseStudiesRef, { once: true, amount: 0.1 });
+  const ctaInView = useInView(ctaRef, { once: true, amount: 0.3 });
 
   // GSAP Horizontal Scroll Setup
   useEffect(() => {
-    const section = sectionRef.current
-    const scrollContainer = scrollContainerRef.current
+    const section = sectionRef.current;
+    const scrollContainer = scrollContainerRef.current;
 
-    if (!section || !scrollContainer) return
+    if (!section || !scrollContainer) return;
 
     // Calculate the total scroll distance
-    const totalScroll = scrollContainer.scrollWidth - section.offsetWidth
+    const totalScroll = scrollContainer.scrollWidth - section.offsetWidth;
 
     const ctx = gsap.context(() => {
       gsap.to(scrollContainer, {
         x: -totalScroll,
-        ease: "none",
+        ease: 'none',
         scrollTrigger: {
           trigger: section,
-          start: "top top",
+          start: 'top top',
           end: () => `+=${scrollContainer.scrollWidth}`,
           scrub: 1,
           pin: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,
         },
-      })
-    }, sectionRef)
+      });
+    }, sectionRef);
 
-    return () => ctx.revert()
-  }, [])
+    return () => ctx.revert();
+  }, []);
 
   // Animation variants
   const containerVariants = {
@@ -125,7 +125,7 @@ export default function ServicesOverview({ data }: ServicesOverviewProps) {
         delayChildren: 0.1,
       },
     },
-  }
+  };
 
   const itemVariants = {
     hidden: {
@@ -139,10 +139,10 @@ export default function ServicesOverview({ data }: ServicesOverviewProps) {
       scale: 1,
       transition: {
         duration: 0.6,
-        ease: "easeOut" as const, // ✅ TS now sees it as a literal
+        ease: 'easeOut' as const, // ✅ TS now sees it as a literal
       },
     },
-  }
+  };
 
   const cardVariants = {
     hidden: {
@@ -156,11 +156,11 @@ export default function ServicesOverview({ data }: ServicesOverviewProps) {
       rotateX: 0,
       transition: {
         duration: 0.7,
-        ease: "easeOut",
+        ease: 'easeOut',
       },
     },
     hover: {},
-  }
+  };
 
   const caseStudyVariants = {
     hidden: {
@@ -174,10 +174,10 @@ export default function ServicesOverview({ data }: ServicesOverviewProps) {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: "easeOut",
+        ease: 'easeOut',
       },
     },
-  }
+  };
 
   const textRevealVariants = {
     hidden: {
@@ -189,22 +189,22 @@ export default function ServicesOverview({ data }: ServicesOverviewProps) {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: "easeOut",
+        ease: 'easeOut',
       },
     },
-  }
+  };
 
   const buttonVariants = {
     initial: {
       scale: 1,
-      boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
     },
     hover: {
       scale: 1.05,
-      boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+      boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
       transition: {
         duration: 0.15,
-        ease: "easeInOut",
+        ease: 'easeInOut',
       },
     },
     tap: {
@@ -213,10 +213,13 @@ export default function ServicesOverview({ data }: ServicesOverviewProps) {
         duration: 0.1,
       },
     },
-  }
+  };
 
   return (
-    <div className="w-full bg-cover bg-center relative " style={{ backgroundImage: "url('/hero-bg-2.svg')" }}>
+    <div
+      className="w-full bg-cover bg-center relative "
+      style={{ backgroundImage: "url('/hero-bg-2.svg')" }}
+    >
       {/* Animated background elements */}
 
       {/* GSAP Horizontal Scrolling Service Cards Section */}
@@ -225,12 +228,12 @@ export default function ServicesOverview({ data }: ServicesOverviewProps) {
         className="h-screen  overflow-hidden relative -mt-8 bg-transparent"
         style={{ backgroundImage: "url('/hero-bg-2.svg')" }}
       >
-        {" "}
+        {' '}
         <div className="container mx-auto px-4 pt-20 relative z-10">
           <motion.div
             ref={headerRef}
             initial="hidden"
-            animate={headerInView ? "visible" : "hidden"}
+            animate={headerInView ? 'visible' : 'hidden'}
             variants={containerVariants}
             className="text-center"
           >
@@ -323,7 +326,7 @@ export default function ServicesOverview({ data }: ServicesOverviewProps) {
           <motion.div
             ref={ctaRef}
             initial="hidden"
-            animate={ctaInView ? "visible" : "hidden"}
+            animate={ctaInView ? 'visible' : 'hidden'}
             variants={containerVariants}
             className="flex flex-col lg:flex-row items-center justify-between max-w-6xl mx-auto mb-16"
             style={{ backgroundImage: "url('/hero-bg-2.svg')" }}
@@ -348,7 +351,7 @@ export default function ServicesOverview({ data }: ServicesOverviewProps) {
           <motion.div
             ref={caseStudiesRef}
             initial="hidden"
-            animate={caseStudiesInView ? "visible" : "hidden"}
+            animate={caseStudiesInView ? 'visible' : 'hidden'}
             variants={containerVariants}
             // style={{ backgroundImage: "url('/hero-bg-2.svg')" }}
           >
@@ -376,15 +379,15 @@ export default function ServicesOverview({ data }: ServicesOverviewProps) {
                   className={`
                   rounded-xl p-6 flex flex-col justify-end relative border bg-[#D9D9D9] overflow-hidden
                   bg-gradient-to-br from-gray-200 to-gray-300
-                  ${study.size === "large" ? "md:col-span-10 h-[300px] md:h-[400px]" : ""}
-                  ${study.size === "small" ? "md:col-span-5 h-[200px] md:h-[300px]" : ""}
-                  ${study.size === "custom-60" ? "md:col-span-6 h-[200px] md:h-[300px]" : ""}
-                  ${study.size === "custom-40" ? "md:col-span-4 h-[200px] md:h-[300px]" : ""}
+                  ${study.size === 'large' ? 'md:col-span-10 h-[300px] md:h-[400px]' : ''}
+                  ${study.size === 'small' ? 'md:col-span-5 h-[200px] md:h-[300px]' : ''}
+                  ${study.size === 'custom-60' ? 'md:col-span-6 h-[200px] md:h-[300px]' : ''}
+                  ${study.size === 'custom-40' ? 'md:col-span-4 h-[200px] md:h-[300px]' : ''}
                 `}
                   style={{
                     backgroundImage: `url('${study.imageUrl}')`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
                   }}
                 >
                   <div className="relative z-10">
@@ -396,8 +399,12 @@ export default function ServicesOverview({ data }: ServicesOverviewProps) {
 
             {/* Bottom text and link */}
             <motion.div variants={itemVariants} className="text-center">
-              <motion.p className="text-xl md:text-2xl text-gray-700 mb-4" variants={textRevealVariants}>
-                We take your business as our personal <br /> and deliver more than beyond the boundaries
+              <motion.p
+                className="text-xl md:text-2xl text-gray-700 mb-4"
+                variants={textRevealVariants}
+              >
+                We take your business as our personal <br /> and deliver more than beyond the
+                boundaries
               </motion.p>
               <motion.div whileTap={{ scale: 0.95 }}>
                 <Link
@@ -412,5 +419,5 @@ export default function ServicesOverview({ data }: ServicesOverviewProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -41,6 +41,16 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 }) => {
   // Convert rich text to plain text
   const getPlainText = (richText: any) => {
+
+      // ✅ Log props here
+  console.log("HeroSection Props:", {
+    title,
+    subtitle,
+    description,
+    technologies,
+    ctaButtons,
+  });
+
     if (!richText) return '';
     if (typeof richText === 'string') return richText;
     if (Array.isArray(richText)) {
@@ -52,6 +62,14 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   };
 
   const descriptionText = getPlainText(description) || '';
+
+  // ✅ Safe helper to fix invalid URL issue
+  const getIconUrl = (icon: any) => {
+    const rawUrl = icon?.url || icon?.data?.attributes?.url;
+    if (!rawUrl) return null;
+    if (rawUrl.startsWith('http')) return rawUrl; // already Cloudinary
+    return `${process.env.NEXT_PUBLIC_STRAPI_URL}${rawUrl}`;
+  };
 
   return (
     <section className="w-full px-6 py-16 pb-[8rem]">
@@ -105,11 +123,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           <div className="mb-16 md:w-[50%] mt-10 md:mt-0">
             <div className="grid grid-cols-8">
               {technologies.slice(0, 8).map((tech) => {
-                const iconUrl = tech.icon?.url
-                  ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${tech.icon.url}`
-                  : tech.icon?.data?.attributes?.url
-                    ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${tech.icon.data.attributes.url}`
-                    : null;
+                const iconUrl = getIconUrl(tech.icon);
 
                 return (
                   <div key={tech.id} className="flex items-center justify-center">
@@ -133,11 +147,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 
             <div className="grid grid-cols-8 mt-4">
               {technologies.slice(8, 16).map((tech) => {
-                const iconUrl = tech.icon?.url
-                  ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${tech.icon.url}`
-                  : tech.icon?.data?.attributes?.url
-                    ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${tech.icon.data.attributes.url}`
-                    : null;
+                const iconUrl = getIconUrl(tech.icon);
 
                 return (
                   <div key={tech.id} className="flex items-center justify-center">

@@ -16,7 +16,10 @@ export const fetchHomepage = async () => {
         populate: {
           logo: true,
           navigation_link: true,
-          technology: true,
+          technology: {
+            populate: ['icon'],
+          },
+
           cta_buttons: true,
           Brand_Items: true,
           stats: true,
@@ -34,8 +37,8 @@ export const fetchHomepage = async () => {
               },
             },
           },
-           case_studie: {    
-            populate: ['case_studie_Image'], 
+          case_studie: {
+            populate: ['case_studie_Image'],
           },
         },
       },

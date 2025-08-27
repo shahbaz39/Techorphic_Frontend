@@ -40,8 +40,7 @@ const InitialLoader = () => {
           <div className="w-12 h-16 mr-6 flex items-center justify-center">
             <Image src="/location.svg" alt="location" width={100} height={100} />
           </div>
-          San Francisco
-        </div>
+          San Francisco??
       </div>
 
       {/* Progress bar at bottom */}

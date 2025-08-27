@@ -42,14 +42,6 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   // Convert rich text to plain text
   const getPlainText = (richText: any) => {
 
-      // ✅ Log props here
-  console.log("HeroSection Props:", {
-    title,
-    subtitle,
-    description,
-    technologies,
-    ctaButtons,
-  });
 
     if (!richText) return '';
     if (typeof richText === 'string') return richText;

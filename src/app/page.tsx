@@ -37,7 +37,7 @@ export default async function Home() {
   const coreSolutionData = homepageData.CoreSolution?.[0] || null;
 
   const caseStudiesData = homepageData.case_studie?.[0] || null;
-  console.log('Case Studies -->', caseStudiesData);
+  
 
   return (
     <PageWrapper>

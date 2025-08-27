@@ -62,18 +62,18 @@ export default function VideoSection({
     },
   }
 
-  const videoUrl = choice_video?.url ? `${process.env.NEXT_PUBLIC_STRAPI_URL}${choice_video.url}` : null
+  // ✅ Use the full Cloudinary URL as-is
+  const videoUrl = choice_video?.url || null
 
   const parsedFooterDescription = parseRichText(footer_description)
 
-// In your VideoSection component, update the loading condition:
-if (!top_headline && !bottom_headline && !choice_video) {
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-gray-600 text-xl">Loading video section...</div>
-    </div>
-  )
-}
+  if (!top_headline && !bottom_headline && !choice_video) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-gray-600 text-xl">Loading video section...</div>
+      </div>
+    )
+  }
 
   return (
     <motion.div
@@ -94,7 +94,6 @@ if (!top_headline && !bottom_headline && !choice_video) {
           className="text-4xl md:text-5xl font-overcame lg:text-6xl font-bold text-black mb-6 leading-tight max-w-[630px]"
           variants={itemVariants}
         >
-         
           <motion.span
             initial={{ opacity: 0, y: -20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
@@ -120,7 +119,7 @@ if (!top_headline && !bottom_headline && !choice_video) {
       <div className="relative w-full max-w-4xl aspect-video rounded-2xl overflow-hidden shadow-2xl">
         {videoUrl ? (
           <video
-            src={videoUrl}
+            src={videoUrl} // ✅ Use the full Cloudinary URL directly
             className="w-full h-full object-cover"
             controls
             poster="/hero-bg-2.svg"

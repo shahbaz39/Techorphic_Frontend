@@ -20,7 +20,7 @@ export default function PageWrapper({ children }: { children: React.ReactNode })
   // ✅ When loading is complete, render ClientTestimonials + rest of page
   return (
     <>
-      <ClientTestimonials />
+      {/* <ClientTestimonials /> */}
       {children}
     </>
   );

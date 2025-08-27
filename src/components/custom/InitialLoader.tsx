@@ -20,11 +20,11 @@ const InitialLoader = () => {
 
   return (
     <div
-      className="fixed top-0 left-0 w-full h-full flex flex-col justify-between items-start z-50 overflow-hidden"
+      className="fixed top-0 left-0 w-full h-full flex flex-col justify-between items-start  z-[9999]  overflow-hidden"
       style={{ backgroundImage: "url('/pre-loader-bg.svg')" }}
     >
       {/* Background overlay */}
-      <div className="bg-[#00FFBC]/90 w-full h-full fixed top-0 left-0 z-40" />
+      <div className="bg-[#00FFBC]/90 w-full h-full fixed top-0 left-0 z-1000" />
 
       {/* Background decorative elements */}
       <div className="absolute top-25 right-20 text-black text-9xl  z-50">{'{'}</div>

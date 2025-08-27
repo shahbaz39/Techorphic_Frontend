@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import InitialLoader from '@/components/custom/InitialLoader';
-import ClientTestimonials from '@/features/landing/testimonials/ClientTestimonials';
 
 export default function PageWrapper({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
@@ -13,15 +12,17 @@ export default function PageWrapper({ children }: { children: React.ReactNode })
     return () => clearTimeout(timer);
   }, []);
 
-  if (loading) {
-    return <InitialLoader />;
-  }
-
-  // ✅ When loading is complete, render ClientTestimonials + rest of page
   return (
-    <>
-      {/* <ClientTestimonials /> */}
+    <div className="relative">
+      {/* Always render children */}
       {children}
-    </>
+
+      {/* Loader overlay */}
+      {loading && (
+        <div className="fixed inset-0 z-50 bg-white flex items-center justify-center">
+          <InitialLoader />
+        </div>
+      )}
+    </div>
   );
 }

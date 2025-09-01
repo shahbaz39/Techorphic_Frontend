@@ -10,6 +10,7 @@ import VideoSection from '@/features/landing/videoSection/VideoSection';
 import WhoWeAre from '@/features/landing/whoweare/WhoWeAre';
 import FocusedAreasCards from '@/features/landing/whoweare/FocusedAreasCards';
 import PageWrapper from './PageWrapper';
+import ClientTestimonials from '@/features/landing/testimonials/ClientTestimonials';
 
 export const revalidate = 60;
 
@@ -98,7 +99,7 @@ export default async function Home() {
 
       {/* SERVICES */}
       {coreSolutionData && <ServicesOverview data={coreSolutionData} />}
-      
+       
     </PageWrapper>
   );
 }

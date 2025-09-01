@@ -41,8 +41,6 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 }) => {
   // Convert rich text to plain text
   const getPlainText = (richText: any) => {
-
-
     if (!richText) return '';
     if (typeof richText === 'string') return richText;
     if (Array.isArray(richText)) {
@@ -129,7 +127,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                         }
                         width={20}
                         height={20}
-                        className="object-contain"
+                        className="h-6 w-auto object-contain" // ✅ maintain aspect ratio
                       />
                     )}
                   </div>
@@ -153,7 +151,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                         }
                         width={30}
                         height={30}
-                        className="object-contain"
+                        className="h-6 w-auto object-contain" // ✅ maintain aspect ratio
                       />
                     )}
                   </div>

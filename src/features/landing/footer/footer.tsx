@@ -1,7 +1,7 @@
 'use client';
 import { ArrowUp } from 'lucide-react';
 
-export default function Footer() {
+export default function Footer({ footer }: { footer: any }) {
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -9,13 +9,15 @@ export default function Footer() {
     });
   };
 
+  if (!footer) return null; // wait for Strapi data
+
   return (
     <footer className="relative w-full bg-[#00FFBC] text-black">
       <div className="max-w-7xl mx-auto">
         {/* Company Name */}
         <div className="px-4 sm:px-6 lg:px-8">
           <h3 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-extrabold pt-6 sm:pt-8 lg:pt-10">
-            techorphic
+            {footer.company_name || 'Techorphic'}
           </h3>
         </div>
 
@@ -25,30 +27,29 @@ export default function Footer() {
             {/* Company Info */}
             <div className="col-span-1 sm:col-span-2 lg:col-span-2 flex flex-col">
               <p className="text-sm sm:text-base lg:text-lg leading-relaxed max-w-full sm:max-w-md lg:max-w-lg pr-0 sm:pr-4 lg:pr-8">
-                At Techorphic, an experienced IT software development company, we help businesses
-                like yours figure out what&apos;s next, whether you&apos;re launching something new
-                or just need a second opinion.
+                {footer.description ||
+                  ``}
               </p>
             </div>
 
             {/* Contact Info */}
             <div className="col-span-1 flex flex-col space-y-3 sm:space-y-4 text-sm sm:text-base order-2 sm:order-none">
               <div className="space-y-2 sm:space-y-3">
-                <p className="font-medium">Sabzazar Scheme, Lahore</p>
+                <p className="font-medium">{footer.address || 'Sabzazar Scheme, Lahore'}</p>
                 <p>
                   <a
-                    href="mailto:info@techorphic.com"
+                    href={`mailto:${footer.email || 'info@techorphic.com'}`}
                     className="hover:underline transition-all duration-200 hover:text-gray-700"
                   >
-                    info@techorphic.com
+                    {footer.email || 'info@techorphic.com'}
                   </a>
                 </p>
                 <p>
                   <a
-                    href="tel:+923086232070"
+                    href={`tel:${footer.phone || '+923086232070?'}`}
                     className="hover:underline transition-all duration-200 hover:text-gray-700"
                   >
-                    +92 308 6232 070
+                    {footer.phone || '+92 308 6232 070'}
                   </a>
                 </p>
               </div>
@@ -61,20 +62,34 @@ export default function Footer() {
             {/* Social Media Links */}
             <div className="col-span-1 flex flex-col space-y-3 sm:space-y-4 order-1 sm:order-none">
               <div className="flex flex-row sm:flex-col space-x-3 sm:space-x-0 sm:space-y-3 lg:space-y-4">
-                <button className="bg-black text-[#22CDA0] flex-1 sm:flex-none sm:w-32 lg:w-36 py-2 sm:py-3 rounded-md text-sm sm:text-base font-semibold shadow-lg hover:bg-gray-800 transition-colors duration-200">
-                  Instagram
-                </button>
-                <button className="bg-black text-[#22CDA0] flex-1 sm:flex-none sm:w-32 lg:w-36 py-2 sm:py-3 rounded-md text-sm sm:text-base font-semibold shadow-lg hover:bg-gray-800 transition-colors duration-200">
-                  Facebook
-                </button>
-                <button className="bg-black text-[#22CDA0] flex-1 sm:flex-none sm:w-32 lg:w-36 py-2 sm:py-3 rounded-md text-sm sm:text-base font-semibold shadow-lg hover:bg-gray-800 transition-colors duration-200">
-                  LinkedIn
-                </button>
+                {footer.social_links?.map((link: any) => (
+                  <a
+                    key={link.id}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-black text-[#22CDA0] flex-1 sm:flex-none sm:w-32 lg:w-36 py-2 sm:py-3 rounded-md text-sm sm:text-base font-semibold shadow-lg hover:bg-gray-800 transition-colors duration-200 text-center"
+                  >
+                   {link.platform_name}
+                  </a>
+                )) || (
+                  <>
+                    <button className="bg-black text-[#22CDA0] flex-1 sm:flex-none sm:w-32 lg:w-36 py-2 sm:py-3 rounded-md text-sm sm:text-base font-semibold shadow-lg hover:bg-gray-800 transition-colors duration-200">
+                      Instagram
+                    </button>
+                    <button className="bg-black text-[#22CDA0] flex-1 sm:flex-none sm:w-32 lg:w-36 py-2 sm:py-3 rounded-md text-sm sm:text-base font-semibold shadow-lg hover:bg-gray-800 transition-colors duration-200">
+                      Facebook
+                    </button>
+                    <button className="bg-black text-[#22CDA0] flex-1 sm:flex-none sm:w-32 lg:w-36 py-2 sm:py-3 rounded-md text-sm sm:text-base font-semibold shadow-lg hover:bg-gray-800 transition-colors duration-200">
+                      LinkedIn
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           </div>
 
-          {/* To Top Button - Responsive positioning */}
+          {/* To Top Button */}
           <button
             onClick={scrollToTop}
             className="absolute right-4 sm:right-6 lg:right-8 bottom-4 sm:bottom-6 lg:bottom-8 xl:-bottom-16 bg-black text-white w-6 sm:w-7 lg:w-8 h-16 sm:h-20 lg:h-24 rounded-xl sm:rounded-2xl flex flex-col items-center justify-center text-xs sm:text-sm uppercase font-semibold shadow-lg hover:bg-gray-800 transition-colors duration-200"
@@ -93,8 +108,12 @@ export default function Footer() {
         {/* Copyright Section */}
         <div className="px-4 sm:px-6 lg:px-8 py-6 sm:py-8 border-t-2 border-black mx-4 sm:mx-6 lg:mx-8 text-sm sm:text-base lg:text-lg mt-12 sm:mt-16 lg:mt-20">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-2 sm:space-y-0">
-            <p className="font-medium">All Rights Reserved | Techorphic</p>
-            <p className="text-xs sm:text-sm text-gray-700">© 2024 Techorphic Developers</p>
+            <p className="font-medium">
+              All Rights Reserved | {footer.company_name || 'Techorphic'}
+            </p>
+            <p className="text-xs sm:text-sm text-gray-700">
+              © {new Date().getFullYear()} {footer.company_name || 'Techorphic'} Developers
+            </p>
           </div>
         </div>
       </div>

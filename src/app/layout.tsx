@@ -9,6 +9,7 @@ import ClientTestimonials from '@/features/landing/testimonials/ClientTestimonia
 import FreeAuditForm from '@/features/landing/freeAuditForm/FreeAuditForm';
 import FAQsSection from '@/features/landing/FAQsSection/FAQsSection';
 import Footer from '@/features/landing/footer/footer';
+import { fetchHomepage } from '@/lib/api';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -31,6 +32,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const [isNavbarVisible, setIsNavbarVisible] = useState(false);
+  const [footerData, setFooterData] = useState<any>(null);
+  const [faqData, setFaqData] = useState<any[]>([]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -43,9 +46,20 @@ export default function RootLayout({
 
     window.addEventListener('scroll', handleScroll);
 
+    // ✅ fetch homepage and set footer + faq
+    fetchHomepage().then((data) => {
+      if (data?.Footer?.length) {
+        setFooterData(data.Footer[0]);
+      }
+      if (data?.FAQSection?.length) {
+        setFaqData(data.FAQSection);
+      }
+    });
+
     // Cleanup
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
@@ -61,9 +75,12 @@ export default function RootLayout({
         {children}
         <ClientTestimonials />
         <FreeAuditForm />
-        <FAQsSection />
-        <Footer />
+        {/* ✅ Pass FAQ data safely */}
+        <FAQsSection faqs={faqData} />
+        {/* ✅ Pass footer data safely */}
+        <Footer footer={footerData} />
       </body>
     </html>
   );
 }
+  

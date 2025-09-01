@@ -1,5 +1,3 @@
-import type { NextConfig } from 'next';
-
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
@@ -16,17 +14,20 @@ const nextConfig: NextConfig = {
         hostname: 'localhost',
         port: '1337',
       },
-      // Add your production Strapi hostname when you deploy
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com', // ✅ Add this
+      },
     ],
   },
   experimental: {
     optimizePackageImports: ['@strapi/strapi'],
   },
   eslint: {
-    ignoreDuringBuilds: true, // ✅ Ignore ESLint errors
+    ignoreDuringBuilds: true,
   },
   typescript: {
-    ignoreBuildErrors: true, // ✅ Ignore TypeScript errors
+    ignoreBuildErrors: true,
   },
 };
 

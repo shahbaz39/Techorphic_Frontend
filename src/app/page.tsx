@@ -38,7 +38,15 @@ export default async function Home() {
   const coreSolutionData = homepageData.CoreSolution?.[0] || null;
 
   const caseStudiesData = homepageData.case_studie?.[0] || null;
-  
+  // console.log("Case studies -->", caseStudiesData)
+ if (caseStudiesData?.case_studie_Image) {
+  caseStudiesData.case_studie_Image.forEach((img: any) => {
+    console.log('Cloudinary URL -->', img.case_studies_img?.url);
+    console.log('Description -->', img.case_studies_img_description?.[0]?.children?.[0]?.text);
+    console.log('Pdf -->', img.case_studies_pdf?.url); // now should work 🚀
+  });
+ }
+
 
   return (
     <PageWrapper>
@@ -98,8 +106,12 @@ export default async function Home() {
       )}
 
       {/* SERVICES */}
-      {coreSolutionData && <ServicesOverview data={coreSolutionData} />}
-       
+      {coreSolutionData && (
+        <ServicesOverview
+          data={coreSolutionData}
+          caseStudies={caseStudiesData} // ✅ pass case studies here
+        />
+      )}
     </PageWrapper>
   );
 }

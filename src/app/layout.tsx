@@ -34,6 +34,7 @@ export default function RootLayout({
   const [isNavbarVisible, setIsNavbarVisible] = useState(false);
   const [footerData, setFooterData] = useState<any>(null);
   const [faqData, setFaqData] = useState<any[]>([]);
+  const [faqTitle, setFaqTitle] = useState<string>('FAQS');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -52,7 +53,9 @@ export default function RootLayout({
         setFooterData(data.Footer[0]);
       }
       if (data?.FAQSection?.length) {
-        setFaqData(data.FAQSection);
+        const faqSection = data.FAQSection[0];
+        setFaqData(faqSection.faqitem || []);
+        setFaqTitle(faqSection.title || 'FAQS');
       }
     });
 
@@ -76,11 +79,10 @@ export default function RootLayout({
         <ClientTestimonials />
         <FreeAuditForm />
         {/* ✅ Pass FAQ data safely */}
-        <FAQsSection faqs={faqData} />
+        <FAQsSection faqs={faqData} title={faqTitle} />
         {/* ✅ Pass footer data safely */}
         <Footer footer={footerData} />
       </body>
     </html>
   );
 }
-  

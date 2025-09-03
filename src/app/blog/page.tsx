@@ -1,40 +1,23 @@
-"use client";
-
-import { useState, useEffect } from "react";
+// app/blog/page.tsx
 import Link from "next/link";
 import Image from "next/image";
 import Navbar from "@/features/landing/nav/Navbar";
 import { fetchBlogs, fetchBlogsPage } from "@/lib/api";
 
-export default function BlogList() {
-  const [blogs, setBlogs] = useState([]);
-  const [blogPageData, setBlogPageData] = useState(null);
-  const [loading, setLoading] = useState(true);
+// ✅ ISR enabled: page will revalidate every 60 seconds
+export const revalidate = 60; // ⏳ change to whatever interval you like
 
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        setLoading(true);
-        const [blogsData, pageData] = await Promise.all([
-          fetchBlogs(),
-          fetchBlogsPage(),
-        ]);
+export default async function BlogList() {
+  // Pre-rendered at build time, then revalidated every 60s
+  const [blogsData, pageData] = await Promise.all([
+    fetchBlogs(),
+    fetchBlogsPage(),
+  ]);
 
-        // ✅ Access data directly
-        setBlogs(blogsData?.data || []);
-        setBlogPageData(pageData || null);
-      } catch (error) {
-        console.error("Error loading data:", error);
-        setBlogs([]);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const blogs = blogsData?.data || [];
+  const blogPageData = pageData || null;
 
-    loadData();
-  }, []);
-
-  const formatDate = (dateString) => {
+  const formatDate = (dateString: string) => {
     if (!dateString) return "";
     try {
       return new Date(dateString).toLocaleDateString("en-US", {
@@ -46,14 +29,6 @@ export default function BlogList() {
       return dateString;
     }
   };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
 
   return (
     <div
@@ -79,7 +54,7 @@ export default function BlogList() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {blogs.map((blog) => {
+            {blogs.map((blog: any) => {
               const {
                 id,
                 title,
@@ -91,7 +66,6 @@ export default function BlogList() {
                 thumbnail,
               } = blog;
 
-              // ✅ Only use valid URL for Next.js Image
               let thumbnailUrl = null;
               if (thumbnail?.url) {
                 const url = thumbnail.url;

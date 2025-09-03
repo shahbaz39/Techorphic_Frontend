@@ -37,8 +37,13 @@ export const fetchHomepage = async () => {
             },
           },
           case_studie: {
-            populate: ['case_studie_Image'],
+            populate: {
+              case_studie_Image: {
+                populate: ['case_studies_img', 'case_studies_pdf'], // ✅ only media
+              },
+            },
           },
+
           ClientTestimonial: {
             populate: ['testimonialItem'],
           },
@@ -58,7 +63,7 @@ export const fetchHomepage = async () => {
     });
 
     const data = response.data.data;
-    console.log('✅ Fetched homepage data:', data);
+    console.log('✅ Fetched homepage data -->:', data);
 
     if (Array.isArray(data.IndustryLeadersChoiceSection)) {
       data.IndustryLeadersChoiceSection = data.IndustryLeadersChoiceSection[0] || null;

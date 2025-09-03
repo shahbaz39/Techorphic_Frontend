@@ -11,6 +11,21 @@ if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
 }
 
+interface CaseStudyImage {
+  id: number;
+  case_studies_img: { url: string };
+  case_studies_img_description: Array<{ children: Array<{ text: string }> }>;
+}
+
+interface CaseStudiesData {
+  title: string;
+  description: string;
+  case_studie_Image: CaseStudyImage[];
+  case_studies_footer_description: string;
+  explore_button: string;
+  explore_button_link: string;
+}
+
 interface ServicesOverviewProps {
   data: {
     title: string;
@@ -23,15 +38,17 @@ interface ServicesOverviewProps {
       category_title: string;
       servicename: Array<{
         id: number;
-        name: string; // Fixed property name from service_name to name to match API data
+        name: string;
       }>;
     }>;
   };
+  caseStudies?: CaseStudiesData | null;
 }
 
-export default function ServicesOverview({ data }: ServicesOverviewProps) {
-  const { title, subtitle, cta_title, cta_description, cta_button, ServicesCategory } = data;
-
+export default function ServicesOverview({
+  data,
+  caseStudies: caseStudiesProp,
+}: ServicesOverviewProps) {
   // Refs for GSAP
   const sectionRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -41,47 +58,7 @@ export default function ServicesOverview({ data }: ServicesOverviewProps) {
   const caseStudiesRef = useRef(null);
   const ctaRef = useRef(null);
 
-  // Dynamic rotation logic
-  const getCardRotation = (index: number) => {
-    // Pattern: -rotate-2, rotate-2, -rotate-2, rotate-2, ...
-    return index % 2 === 0 ? '-rotate-2' : 'rotate-2';
-  };
-
-  const services =
-    ServicesCategory?.map((category) => ({
-      title: category.category_title,
-      items: category.servicename?.map((service) => service.name.replace(/\n+/g, '').trim()) || [], // Fixed property access and cleaned up newline characters
-    })) || [];
-
-  const caseStudies = [
-    {
-      title: 'Skip Tracing Platform Development',
-      size: 'large',
-      imageUrl: '/placeholder.svg?height=400&width=700',
-    },
-    {
-      title: 'Skip Tracing Platform',
-      size: 'small',
-      imageUrl: '/placeholder.svg?height=300&width=350',
-    },
-    {
-      title: 'Branding',
-      size: 'small',
-      imageUrl: '/placeholder.svg?height=300&width=350',
-    },
-    {
-      title: 'Skip Tracing Platform',
-      size: 'custom-60',
-      imageUrl: '/placeholder.svg?height=300&width=420',
-    },
-    {
-      title: 'Branding',
-      size: 'custom-40',
-      imageUrl: '/placeholder.svg?height=300&width=280',
-    },
-  ];
-
-  // InView hooks
+  // InView hooks - must be called before any conditional returns
   const headerInView = useInView(headerRef, { once: true, amount: 0.3 });
   const caseStudiesInView = useInView(caseStudiesRef, { once: true, amount: 0.1 });
   const ctaInView = useInView(ctaRef, { once: true, amount: 0.3 });
@@ -93,7 +70,6 @@ export default function ServicesOverview({ data }: ServicesOverviewProps) {
 
     if (!section || !scrollContainer) return;
 
-    // Calculate the total scroll distance
     const totalScroll = scrollContainer.scrollWidth - section.offsetWidth;
 
     const ctx = gsap.context(() => {
@@ -114,6 +90,43 @@ export default function ServicesOverview({ data }: ServicesOverviewProps) {
 
     return () => ctx.revert();
   }, []);
+
+  // Error handling for undefined data
+  if (!data) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-red-500">Error: Services data is not available</div>
+      </div>
+    );
+  }
+
+  const { title, subtitle, cta_title, cta_description, cta_button, ServicesCategory } = data;
+
+  // Dynamic rotation logic
+  const getCardRotation = (index: number) => {
+    return index % 2 === 0 ? '-rotate-2' : 'rotate-2';
+  };
+
+  const services =
+    ServicesCategory?.map((category) => ({
+      title: category.category_title,
+      items: category.servicename?.map((service) => service.name.replace(/\n+/g, '').trim()) || [],
+    })) || [];
+
+  const caseStudies = caseStudiesProp?.case_studie_Image?.map((study, index) => {
+    let size = 'small';
+    if (index === 0) size = 'large';
+    else if (index % 4 === 1 || index % 4 === 2) size = 'small';
+    else if (index % 4 === 3) size = 'custom-60';
+    else if (index % 4 === 0 && index > 0) size = 'custom-40';
+
+    return {
+      title: study.case_studies_img_description?.[0]?.children?.[0]?.text || 'Case Study',
+      size,
+      imageUrl: study.case_studies_img?.url || '/placeholder.svg?height=400&width=700',
+      pdfUrl: study.case_studies_pdf?.url || null, // ✅ Add PDF
+    };
+  });
 
   // Animation variants
   const containerVariants = {
@@ -139,7 +152,7 @@ export default function ServicesOverview({ data }: ServicesOverviewProps) {
       scale: 1,
       transition: {
         duration: 0.6,
-        ease: 'easeOut' as const, // ✅ TS now sees it as a literal
+        ease: 'easeOut' as const,
       },
     },
   };
@@ -220,15 +233,12 @@ export default function ServicesOverview({ data }: ServicesOverviewProps) {
       className="w-full bg-cover bg-center relative "
       style={{ backgroundImage: "url('/hero-bg-2.svg')" }}
     >
-      {/* Animated background elements */}
-
       {/* GSAP Horizontal Scrolling Service Cards Section */}
       <section
         ref={sectionRef}
         className="h-screen  overflow-hidden relative -mt-8 bg-transparent"
         style={{ backgroundImage: "url('/hero-bg-2.svg')" }}
       >
-        {' '}
         <div className="container mx-auto px-4 pt-20 relative z-10">
           <motion.div
             ref={headerRef}
@@ -239,7 +249,7 @@ export default function ServicesOverview({ data }: ServicesOverviewProps) {
           >
             <motion.h2
               variants={textRevealVariants}
-              className=" mx-auto max-w-[700px] text-4xl md:text-5xl font-overcame font-bold mb-8 text-gray-800"
+              className=" mx-auto max-w-[700px] text-4xl md:text-5xl  mb-8 text-gray-800 font-overcame font-bold"
             >
               <motion.span
                 initial={{ opacity: 0, y: 30 }}
@@ -262,7 +272,7 @@ export default function ServicesOverview({ data }: ServicesOverviewProps) {
           ref={scrollContainerRef}
           className="flex h-fit items-center absolute mt-5"
           style={{
-            width: `${services.length * 350}px`, // Card width + gap
+            width: `${services.length * 350}px`,
           }}
         >
           {services.map((service, index) => (
@@ -299,18 +309,6 @@ export default function ServicesOverview({ data }: ServicesOverviewProps) {
                       <div className="flex items-center space-x-3">
                         <p className="text-[#00FFBC] text-lg font-medium">{item}</p>
                       </div>
-                      {/* {itemIndex < service.items.length - 1 && (
-                        <motion.div
-                          className="w-full h-[.5px] bg-[#00A77B] mt-2"
-                          initial={{ scaleX: 0 }}
-                          animate={{ scaleX: 1 }}
-                          transition={{
-                            delay: index * 0.05 + itemIndex * 0.03 + 0.2,
-                            duration: 0.3,
-                          }}
-                          style={{ originX: 0 }}
-                        />
-                      )} */}
                     </motion.div>
                   ))}
                 </div>
@@ -353,24 +351,23 @@ export default function ServicesOverview({ data }: ServicesOverviewProps) {
             initial="hidden"
             animate={caseStudiesInView ? 'visible' : 'hidden'}
             variants={containerVariants}
-            // style={{ backgroundImage: "url('/hero-bg-2.svg')" }}
           >
             <motion.h2
               variants={textRevealVariants}
               className="text-4xl md:text-5xl font-bold mb-8 text-center text-gray-800 uppercase"
             >
-              Case Studies
+              {caseStudiesProp?.title || 'Case Studies'}
             </motion.h2>
             <motion.p
               variants={textRevealVariants}
               className="mb-12 font-[400] text-xl md:text-2xl text-center text-gray-700"
             >
-              Our Work in Action
+              {caseStudiesProp?.description || 'Our Work in Action'}
             </motion.p>
 
             <motion.div
               variants={containerVariants}
-              className="grid grid-cols-1 md:grid-cols-10 gap-6 mb-16 max-w-7xl mx-auto"
+              className="grid grid-cols-1 md:grid-cols-10 gap-6 mb-16 max-w-7xl mx-auto cursor-pointer"
             >
               {caseStudies.map((study, index) => (
                 <motion.div
@@ -391,7 +388,7 @@ export default function ServicesOverview({ data }: ServicesOverviewProps) {
                   }}
                 >
                   <div className="relative z-10">
-                    <p className="text-xl font-[400] text-[#000000]">{study.title}</p>
+                    <p className="text-xl font-[400] text-[#fff]">{study.title}</p>
                   </div>
                 </motion.div>
               ))}
@@ -403,15 +400,15 @@ export default function ServicesOverview({ data }: ServicesOverviewProps) {
                 className="text-xl md:text-2xl text-gray-700 mb-4"
                 variants={textRevealVariants}
               >
-                We take your business as our personal <br /> and deliver more than beyond the
-                boundaries
+                {caseStudiesProp?.case_studies_footer_description ||
+                  'We take your business as our personal and deliver more than beyond the boundaries'}
               </motion.p>
               <motion.div whileTap={{ scale: 0.95 }}>
                 <Link
-                  href="#"
+                  href={caseStudiesProp?.explore_button_link || '#'}
                   className="text-xl md:text-2xl text-gray-800 underline underline-offset-4 hover:text-emerald-600 transition-colors duration-300"
                 >
-                  Explore Our Latest Projects
+                  {caseStudiesProp?.explore_button || 'Explore Our Latest Projects'}
                 </Link>
               </motion.div>
             </motion.div>

@@ -157,6 +157,53 @@ export const fetchBlogsPage = async () => {
   }
 };
 
+
+export const fetchServicesPage = async () => {
+  try {
+    const response = await api.get('/services-page', {
+      params: {
+        populate: {
+          PremierAgencySection: {
+            populate: {
+              ServiceItem: true, // ✅ fetch nested repeatable items
+            },
+          },
+           TechnologiesSection: {
+            populate: {
+              tech_icons: {
+                populate: ['icon'], // ✅ fetch icons
+              },
+              bottom_icon: {
+                populate: ['icon'], // ✅ fetch bottom icons
+              },
+            },
+          },
+           Why_us: {
+            populate: {
+              cards: {
+                populate: ['icon'], // ✅ fetch card icons
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const data = response.data.data;
+
+    console.log('✅ Fetched services page -->:', data);
+    return data;
+  } catch (error: any) {
+    console.error(
+      '❌ Error fetching services page:',
+      error.response?.data || error.message || error
+    );
+    return null;
+  }
+};
+
+
+
 export const fetchGlobalData = async () => {
   try {
     const response = await api.get('/global', {

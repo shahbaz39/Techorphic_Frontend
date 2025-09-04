@@ -5,9 +5,20 @@ import { Variants } from 'framer-motion';
 
 interface HeroSectionProps {
   caseStudies: any[];
+  servicesPage?: any; // ✅ added servicesPage prop
 }
 
-const HeroSection: React.FC<HeroSectionProps> = ({ caseStudies }) => {
+// helper function to safely extract plain text from Strapi rich text blocks
+const extractText = (blocks: any[]): string => {
+  if (!blocks || !Array.isArray(blocks)) return '';
+  return blocks
+    .map((block) =>
+      block?.children?.map((child: any) => child?.text || '').join(' ')
+    )
+    .join(' ');
+};
+
+const HeroSection: React.FC<HeroSectionProps> = ({ caseStudies, servicesPage }) => {
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -46,25 +57,32 @@ const HeroSection: React.FC<HeroSectionProps> = ({ caseStudies }) => {
                 verticalAlign: 'middle',
               }}
             >
-              Web Development
-              <br />
-              Leaders in <span className="text-[#00FFBC]">Los Angeles</span>
+              {servicesPage?.page_title || 'Web Development'}
+             {' '}
+              <span className="text-[#00FFBC]">
+                {servicesPage?.city_name || 'Los Angeles'}
+              </span>
             </h1>
           </div>
 
           <p className="font-[300] md:text-[33px] text-[30px] leading-[110%] tracking-[-1.7%] mt-16 max-w-5xl">
-            Here in California, innovation moves fast, and so do we. As a leading web development
-            company in Los Angeles, Techorphic partners with startups and growing businesses to
-            build websites and platforms that are smart, scalable, and customized for real-world
-            success.
+            {extractText(servicesPage?.intro_paragraph) ||
+              `Here in California, innovation moves fast, and so do we. As a leading web development
+              company in Los Angeles, Techorphic partners with startups and growing businesses to
+              build websites and platforms that are smart, scalable, and customized for real-world
+              success.`}
           </p>
 
           <p className="font-[300] md:text-[33px] text-[30px] leading-[110%] tracking-[-1.7%] mt-16 max-w-5xl">
-            Need something <span className="font-bold">simple/built to scale?</span>
+            Need something{' '}
+            <span className="font-bold">
+              {servicesPage?.highlighted_text || 'simple/built to scale?'}
+            </span>
           </p>
+
           <p className="font-[300] md:text-[33px] text-[30px] leading-[110%] tracking-[-1.7%] max-w-5xl">
-            Whatever stage you&apos;re at, Techorphic blends creativity and code to build exactly
-            what your business needs.
+            {extractText(servicesPage?.second_paragraph) ||
+              `Whatever stage you're at, Techorphic blends creativity and code to build exactly what your business needs.`}
           </p>
         </div>
 
@@ -106,7 +124,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ caseStudies }) => {
                   }}
                 >
                   <div className="relative z-10">
-                    <p className="text-xl font-[400] text-[#000000]">
+                    <p className="text-xl font-[400] text-white drop-shadow-[0_4px_6px_rgba(0,0,0,0.7)]">
                       {study.case_studies_img_description?.[0]?.children?.[0]?.text || 'Case Study'}
                     </p>
                   </div>

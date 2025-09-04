@@ -388,7 +388,9 @@ export default function ServicesOverview({
                   }}
                 >
                   <div className="relative z-10">
-                    <p className="text-xl font-[400] text-[#fff]">{study.title}</p>
+                    <p className="text-xl font-[400] text-white drop-shadow-[0_4px_6px_rgba(0,0,0,0.7)]">
+                      {study.title}
+                    </p>
                   </div>
                 </motion.div>
               ))}

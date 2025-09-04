@@ -12,7 +12,8 @@ export default async function page() {
   const homepageData = await fetchHomepage();
   const servicesPageData = await fetchServicesPage();
 
-  const caseStudiesData = homepageData.case_studie?.[0] || null;
+  const caseStudiesData = homepageData?.case_studie?.[0] ?? {};
+
   return (
     <div
       className="min-h-[100vh] w-full bg-cover bg-center relative"
@@ -23,12 +24,12 @@ export default async function page() {
         <Navbar />
       </div>
       <HeroSection
-        caseStudies={caseStudiesData?.case_studie_Image || []}
-        servicesPage={servicesPageData}
+        caseStudies={caseStudiesData.case_studie_Image ?? []}
+        servicesPage={servicesPageData ?? {}}
       />
       <AgencyLosAngeles data={servicesPageData?.PremierAgencySection || []} />
-      <Technologies data={servicesPageData?.TechnologiesSection || []}  />
-     <WhyTechorphic data={servicesPageData?.Why_us || null} />
+      <Technologies data={servicesPageData?.TechnologiesSection || []} />
+      <WhyTechorphic data={servicesPageData?.Why_us || null} />
       <WebDevelopmentProcess />
       <SolutionsCarousel />
     </div>

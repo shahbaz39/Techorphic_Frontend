@@ -6,7 +6,11 @@ import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-const SolutionsCarousel = () => {
+interface SolutionsCarouselProps {
+  data: any;
+}
+
+const SolutionsCarousel = ({ data }: SolutionsCarouselProps) => {
   const [emblaRef, emblaApi] = useEmblaCarousel(
     {
       loop: true,
@@ -52,75 +56,9 @@ const SolutionsCarousel = () => {
     emblaApi.on('select', onSelect);
   }, [emblaApi, onInit, onSelect]);
 
-  const solutions = [
-    {
-      category: 'Tech Startups',
-      description:
-        "We've helped fast-growing tech startups across LA launch bold digital products.",
-      stats: [
-        { number: '8+', text: 'Years of experience in the startup ecosystem.' },
-        { number: '47+', text: 'Tech clients are served across Los Angeles.' },
-      ],
-    },
-    {
-      category: 'Healthcare Solutions',
-      description:
-        'Delivering secure, compliant digital solutions for healthcare providers and medical practices.',
-      stats: [
-        { number: '12+', text: 'Years serving healthcare industry professionals.' },
-        { number: '35+', text: 'Healthcare clients successfully launched.' },
-      ],
-    },
-    {
-      category: 'E-commerce & Retail',
-      description:
-        'Building powerful online stores and marketplaces that drive sales and customer engagement.',
-      stats: [
-        { number: '15+', text: 'E-commerce platforms successfully built.' },
-        { number: '60+', text: 'Online stores optimized for conversion.' },
-      ],
-    },
-    {
-      category: 'Financial Services',
-      description:
-        'Secure, compliant fintech solutions for modern financial institutions and startups.',
-      stats: [
-        { number: '10+', text: 'Years in financial technology sector.' },
-        { number: '28+', text: 'Financial services clients served.' },
-      ],
-    },
-    {
-      category: 'Education & Learning',
-      description:
-        'Innovative educational technology solutions that enhance learning experiences and outcomes.',
-      stats: [
-        { number: '7+', text: 'Years transforming education sector.' },
-        { number: '42+', text: 'Educational institutions supported.' },
-      ],
-    },
-  ];
-
-  const servicesTags = [
-    'Web Design & Development',
-    'Web App & SaaS Development',
-    'MVP Development',
-    'CMS Solutions',
-    'Cloud Integration',
-    'UI/UX Design',
-    'SEO',
-    'UI/UX Design',
-    'Patient Portals',
-    'Online Booking Systems',
-    'CRM Integration',
-    'App Development',
-    'HIPAA Compliance Consulting',
-    'Online Exam Portals',
-    'IDX/MLS Integrations',
-    'LMS Integration',
-    'UI/UX Design',
-    'Client Dashboards',
-    'Finance Portals',
-  ];
+  // ✅ Fetch dynamic data from Strapi
+  const solutions = data?.solution_card || [];
+  const servicesTags = data?.services_names?.map((s: any) => s.services_names) || [];
 
   return (
     <section className="min-h-screen bg-gradient-to-l from-emerald-500/90 via-emerald-950/90 to-black relative overflow-hidden">
@@ -134,13 +72,11 @@ const SolutionsCarousel = () => {
         <div className="container mx-auto px-4 py-16 relative z-10">
           {/* Header */}
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 font-overcame tracking-tight">
-              SOLUTION SE HAVE
-              <br />
-              PROVIDED
+            <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 font-overcame tracking-tight whitespace-pre-line">
+              {data?.title || 'SOLUTIONS WE HAVE PROVIDED'}
             </h2>
             <p className="text-xl md:text-2xl text-white max-w-2xl mx-auto leading-relaxed">
-              We Have Served Diverse Clientele with Web Development in Los Angeles
+              {data?.description || 'We Have Served Diverse Clientele with Web Development in Los Angeles'}
             </p>
           </div>
 
@@ -164,7 +100,7 @@ const SolutionsCarousel = () => {
             {/* Embla Carousel */}
             <div className="overflow-hidden rounded-2xl" ref={emblaRef}>
               <div className="flex">
-                {solutions.map((solution, index) => (
+                {solutions.map((solution: any, index: number) => (
                   <div key={index} className="flex-[0_0_100%] min-w-0 ">
                     <div className="h-[500px] grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
                       {/* Left Content */}
@@ -172,7 +108,7 @@ const SolutionsCarousel = () => {
                         {/* Main Card */}
                         <div className="bg-white h-full rounded-2xl p-6 shadow-2xl transform ">
                           <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                            {solution.category}
+                            {solution.title}
                           </h3>
                           <p className="text-gray-700 text-xl font-[400] leading-relaxed">
                             {solution.description}
@@ -181,34 +117,35 @@ const SolutionsCarousel = () => {
 
                         {/* Stats Cards */}
                         <div className="space-y-3">
-                          {solution.stats.map((stat, statIndex) => (
-                            <div
-                              key={statIndex}
-                              className="bg-[#00FFBC] rounded-2xl px-4 py-2 text-gray-900 transform  shadow-lg"
-                            >
-                              <div className="flex items-center space-x-4  justify-between">
-                                <span className="text-4xl font-bold pb-6">{stat.number}</span>
-                                <span className="text-xl leading-tight text-right">
-                                  {stat.text?.split(' ').slice(0, 5).join(' ')} <br />{' '}
-                                  {stat.text?.split(' ').slice(5, stat.text?.length).join(' ')}
-                                </span>
-                              </div>
+                          <div className="bg-[#00FFBC] rounded-2xl px-4 py-2 text-gray-900 shadow-lg">
+                            <div className="flex items-center space-x-4 justify-between">
+                              <span className="text-4xl font-bold pb-6">{solution.years_stats}</span>
+                              <span className="text-xl leading-tight text-right">{solution.years_description}</span>
                             </div>
-                          ))}
+                          </div>
+                          <div className="bg-[#00FFBC] rounded-2xl px-4 py-2 text-gray-900 shadow-lg">
+                            <div className="flex items-center space-x-4 justify-between">
+                              <span className="text-4xl font-bold pb-6">{solution.clients_stats}</span>
+                              <span className="text-xl leading-tight text-right">{solution.clients_description}</span>
+                            </div>
+                          </div>
                         </div>
                       </div>
 
+                      {/* Right Image */}
                       <div className="flex items-center justify-center">
-                        <div className="bg-gradient-to-br from-gray-400 to-gray-500 rounded-2xl w-full h-full flex items-center justify-center shadow-2xl transform  relative overflow-hidden">
-                          {/* Background Pattern */}
-                          <div className="absolute inset-0 opacity-20">
-                            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.2),transparent_50%)]"></div>
-                            <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.1)_50%,transparent_75%)]"></div>
-                          </div>
-
-                          <span className="text-white text-2xl font-bold text-center px-8 relative z-10">
-                            Digital Solution
-                          </span>
+                        <div className="bg-gradient-to-br from-gray-400 to-gray-500 rounded-2xl w-full h-full flex items-center justify-center shadow-2xl transform relative overflow-hidden">
+                          {solution.img?.url ? (
+                            <img
+                              src={solution.img.url}
+                              alt={solution.title}
+                              className="w-full h-full object-cover rounded-2xl"
+                            />
+                          ) : (
+                            <span className="text-white text-2xl font-bold text-center px-8 relative z-10">
+                              Digital Solution
+                            </span>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -217,6 +154,7 @@ const SolutionsCarousel = () => {
               </div>
             </div>
 
+            {/* Dots */}
             <div className="flex justify-center space-x-2 mt-6">
               {scrollSnaps.map((_, index) => (
                 <button
@@ -232,9 +170,10 @@ const SolutionsCarousel = () => {
             </div>
           </div>
 
+          {/* Services Tags */}
           <div className="mt-12">
             <div className="flex flex-wrap gap-3 justify-center max-w-6xl mx-auto">
-              {servicesTags.map((service, index) => (
+              {servicesTags.map((service: string, index: number) => (
                 <span
                   key={index}
                   className="backdrop-blur-sm text-black bg-white px-4 py-3 rounded-md text-sm font-[400] cursor-pointer"

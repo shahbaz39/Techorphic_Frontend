@@ -7,51 +7,30 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const WebDevelopmentProcess = () => {
-  const sectionRef = useRef(null);
-  const headerRef = useRef(null);
-  const scrollContainerRef = useRef(null);
-  const cardsRef = useRef([]);
+interface WebDevelopmentProcessProps {
+  data: {
+    title?: string;
+    description?: string;
+    steps?: {
+      id: number;
+      title: string;
+      items: { id: number; item_names: string }[];
+    }[];
+  } | null;
+}
+
+const WebDevelopmentProcess: React.FC<WebDevelopmentProcessProps> = ({ data }) => {
+  const sectionRef = useRef<HTMLDivElement | null>(null);
+  const headerRef = useRef<HTMLDivElement | null>(null);
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
   const headerInView = useInView(headerRef, { once: false, amount: 0.3 });
 
-  const processSteps = [
-    {
-      title: 'Discovery &\nPlanning',
-      items: ['Business analysis', 'Technical requirements', 'Competitive research'],
-    },
-    {
-      title: 'UI/UX Design',
-      items: ['Wireframes', 'User journeys', 'High-fidelity\nprototypes'],
-    },
-    {
-      title: 'Development',
-      items: ['Front-end and\nback-end coding', 'API integrations', 'CMS setup (if required)'],
-    },
-    {
-      title: 'Testing',
-      items: ['Automated\ntesting', 'Speed optimization', 'User acceptance\ntesting'],
-    },
-    {
-      title: 'Discovery &\nPlanning',
-      items: ['Business analysis', 'Technical requirements', 'Competitive research'],
-    },
-    {
-      title: 'UI/UX Design',
-      items: ['Wireframes', 'User journeys', 'High-fidelity\nprototypes'],
-    },
-    {
-      title: 'Development',
-      items: ['Front-end and\nback-end coding', 'API integrations', 'CMS setup (if required)'],
-    },
-    {
-      title: 'Testing',
-      items: ['Automated\ntesting', 'Speed optimization', 'User acceptance\ntesting'],
-    },
-  ];
+  const processSteps = data?.steps || [];
 
-  // Generate rotation transforms for each card (matching image style)
+  // Generate alternating rotations for cards
   const cardTransforms = processSteps.map((_, index) => ({
-    rotation: index % 2 === 0 ? -5 : 5, // Alternating rotation pattern
+    rotation: index % 2 === 0 ? -5 : 5,
   }));
 
   useEffect(() => {
@@ -76,7 +55,7 @@ const WebDevelopmentProcess = () => {
     return () => {
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
-  }, []);
+  }, [processSteps]);
 
   return (
     <section
@@ -93,14 +72,12 @@ const WebDevelopmentProcess = () => {
           transition={{ duration: 0.8 }}
           className="text-center"
         >
-          <h2 className="text-4xl md:text-5xl font-bold font-overcame text-black mb-4 tracking-tight">
-            OUR WEB DEVELOPMENT
-            <br />
-            PROCESS
+          <h2 className="text-4xl md:text-5xl font-bold font-overcame text-black mb-4 tracking-tight whitespace-pre-line">
+            {data?.title || 'OUR WEB DEVELOPMENT PROCESS'}
           </h2>
-          <p className="text-lg md:text-xl text-gray-800 max-w-4xl mx-auto px-4">
-            Be it a complex SaaS product, an interactive digital experience, or a powerful internal
-            dashboard, our process keeps your build smart, focused, and aligned with your goals.
+          <p className="text-lg md:text-xl text-gray-800 max-w-4xl mx-auto px-4 whitespace-pre-line">
+            {data?.description ||
+              'Be it a complex SaaS product, an interactive digital experience, or a powerful internal dashboard, our process keeps your build smart, focused, and aligned with your goals.'}
           </p>
         </motion.div>
       </div>
@@ -111,18 +88,18 @@ const WebDevelopmentProcess = () => {
           ref={scrollContainerRef}
           className="flex items-center"
           style={{
-            width: `${processSteps.length * 350}px`, // Increased width for proper spacing
+            width: `${processSteps.length * 350}px`, // ✅ dynamic width
           }}
         >
           {processSteps.map((step, index) => (
             <div
-              key={index}
+              key={step.id}
               ref={(el) => (cardsRef.current[index] = el)}
               className="flex-shrink-0 w-[320px] shadow-md relative"
               style={{
                 transform: `rotate(${cardTransforms[index].rotation}deg)`,
-                marginLeft: index > 0 ? '20px' : '0px', // Added spacing between cards
-                zIndex: index + 1, // Leftmost cards on top
+                marginLeft: index > 0 ? '20px' : '0px',
+                zIndex: index + 1,
               }}
             >
               <div className="bg-gray-900 rounded-3xl shadow-2xl p-8 h-[300px] relative overflow-hidden border border-gray-800">
@@ -134,13 +111,13 @@ const WebDevelopmentProcess = () => {
                 </h3>
 
                 <div className="space-y-4">
-                  {step.items.map((item, itemIndex) => (
-                    <div key={itemIndex} className="relative">
+                  {step.items?.map((item) => (
+                    <div key={item.id} className="relative">
                       <div
                         className="text-base leading-relaxed whitespace-pre-line"
                         style={{ color: '#00FFBC' }}
                       >
-                        {item}
+                        {item.item_names}
                       </div>
                       {/* Underline effect */}
                       <div

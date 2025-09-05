@@ -374,8 +374,7 @@ export default function ServicesOverview({
                   key={index}
                   variants={caseStudyVariants}
                   className={`
-                  rounded-xl p-6 flex flex-col justify-end relative border bg-[#D9D9D9] overflow-hidden
-                  bg-gradient-to-br from-gray-200 to-gray-300
+                  rounded-xl p-6 flex flex-col justify-end relative
                   ${study.size === 'large' ? 'md:col-span-10 h-[300px] md:h-[400px]' : ''}
                   ${study.size === 'small' ? 'md:col-span-5 h-[200px] md:h-[300px]' : ''}
                   ${study.size === 'custom-60' ? 'md:col-span-6 h-[200px] md:h-[300px]' : ''}
@@ -387,11 +386,9 @@ export default function ServicesOverview({
                     backgroundPosition: 'center',
                   }}
                 >
-                  <div className="relative z-10">
-                    <p className="text-xl font-[400] text-white drop-shadow-[0_4px_6px_rgba(0,0,0,0.7)]">
-                      {study.title}
-                    </p>
-                  </div>
+                  {/* <div className="relative z-10 inline-block px-3 py-1 rounded-md bg-white/40">
+                    <p className="text-xl font-[600] text-black">{study.title}</p>
+                  </div> */}
                 </motion.div>
               ))}
             </motion.div>

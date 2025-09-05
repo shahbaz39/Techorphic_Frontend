@@ -114,7 +114,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ caseStudies, servicesPage }) 
                   variants={caseStudyVariants}
                   className={`
                     rounded-xl p-6 flex flex-col justify-end relative overflow-hidden
-                    bg-gradient-to-br from-gray-200 to-gray-300 cursor-pointer
+                    cursor-pointer
                     ${sizeClass}
                   `}
                   style={{
@@ -123,11 +123,11 @@ const HeroSection: React.FC<HeroSectionProps> = ({ caseStudies, servicesPage }) 
                     backgroundPosition: 'center',
                   }}
                 >
-                  <div className="relative z-10">
+                  {/* <div className="relative z-10">
                     <p className="text-xl font-[400] text-white drop-shadow-[0_4px_6px_rgba(0,0,0,0.7)]">
                       {study.case_studies_img_description?.[0]?.children?.[0]?.text || 'Case Study'}
                     </p>
-                  </div>
+                  </div> */}
                 </motion.div>
               );
             })}

@@ -157,7 +157,6 @@ export const fetchBlogsPage = async () => {
   }
 };
 
-
 export const fetchServicesPage = async () => {
   try {
     const response = await api.get('/services-page', {
@@ -168,7 +167,7 @@ export const fetchServicesPage = async () => {
               ServiceItem: true, // ✅ fetch nested repeatable items
             },
           },
-           TechnologiesSection: {
+          TechnologiesSection: {
             populate: {
               tech_icons: {
                 populate: ['icon'], // ✅ fetch icons
@@ -178,11 +177,26 @@ export const fetchServicesPage = async () => {
               },
             },
           },
-           Why_us: {
+          Why_us: {
             populate: {
               cards: {
                 populate: ['icon'], // ✅ fetch card icons
               },
+            },
+          },
+          web_development_process: {
+            populate: {
+              steps: {
+                populate: {
+                  items: true, // ✅ fetch sub-items
+                },
+              },
+            },
+          },
+          Solutions: {
+            populate: {
+              solution_card: { populate: ['img'] },
+              services_names: true,
             },
           },
         },
@@ -196,13 +210,11 @@ export const fetchServicesPage = async () => {
   } catch (error: any) {
     console.error(
       '❌ Error fetching services page:',
-      error.response?.data || error.message || error
+      error.response?.data || error.message || error,
     );
     return null;
   }
 };
-
-
 
 export const fetchGlobalData = async () => {
   try {

@@ -122,7 +122,7 @@ export default function WhyTechorphic({ data }: { data: WhyUsData }) {
       className="bg-black h-screen flex flex-col w-full bg-cover bg-center items-center justify-center px-6 py-20 relative overflow-hidden"
       style={{ backgroundImage: "url('/features-bg.svg')" }}
     >
-      <div className="max-w-6xl w-full text-center relative z-10">
+      <div className="max-w-6xl w-full text-center relative z-10 mt-10">
         {/* Title */}
         <div ref={titleRef} className="mb-6">
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-white leading-tight tracking-tight">

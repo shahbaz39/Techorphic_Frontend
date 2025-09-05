@@ -13,6 +13,7 @@ export default async function page() {
   const servicesPageData = await fetchServicesPage();
 
   const caseStudiesData = homepageData?.case_studie?.[0] ?? {};
+  const webDevProcessData = servicesPageData?.web_development_process || null;
 
   return (
     <div
@@ -30,8 +31,8 @@ export default async function page() {
       <AgencyLosAngeles data={servicesPageData?.PremierAgencySection || []} />
       <Technologies data={servicesPageData?.TechnologiesSection || []} />
       <WhyTechorphic data={servicesPageData?.Why_us || null} />
-      <WebDevelopmentProcess />
-      <SolutionsCarousel />
+      <WebDevelopmentProcess data={webDevProcessData} />
+      <SolutionsCarousel data={servicesPageData?.Solutions || null} />
     </div>
   );
 }

@@ -54,7 +54,7 @@ export default function Footer({ footer }: { footer: any }) {
                 </p>
               </div>
 
-              <button className="bg-black text-white px-4 sm:px-6 py-2 sm:py-3 rounded-md text-sm sm:text-base font-semibold shadow-lg hover:bg-gray-800 transition-colors duration-200 w-fit mt-4 sm:mt-6">
+              <button className="bg-black text-white px-4 sm:px-6 py-2 sm:py-3 rounded-md text-sm sm:text-base font-semibold shadow-lg hover:bg-gray-800 transition-colors duration-200 w-fit mt-4 sm:mt-6 cursor-pointer">
                 LET&apos;S DISCUSS
               </button>
             </div>
@@ -97,7 +97,7 @@ export default function Footer({ footer }: { footer: any }) {
           >
             <ArrowUp className="w-3 h-3 sm:w-4 sm:h-4 mb-1" />
             <span
-              className="text-xs sm:text-sm"
+              className="text-xs sm:text-sm cursor-pointer"
               style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
             >
               TO TOP

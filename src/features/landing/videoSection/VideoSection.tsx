@@ -37,7 +37,7 @@ export default function VideoSection({
   choice_video,
 }: VideoSectionProps) {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: false, threshold: 0.1 })
+  const isInView = useInView(ref, { once: true, threshold: 0.2 })
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -62,9 +62,7 @@ export default function VideoSection({
     },
   }
 
-  // ✅ Use the full Cloudinary URL as-is
   const videoUrl = choice_video?.url || null
-
   const parsedFooterDescription = parseRichText(footer_description)
 
   if (!top_headline && !bottom_headline && !choice_video) {
@@ -119,10 +117,13 @@ export default function VideoSection({
       <div className="relative w-full max-w-4xl aspect-video rounded-2xl overflow-hidden shadow-2xl">
         {videoUrl ? (
           <video
-            src={videoUrl} // ✅ Use the full Cloudinary URL directly
+            src={videoUrl}
             className="w-full h-full object-cover"
             controls
-            poster="/hero-bg-2.svg"
+            preload="none" // ✅ don’t block page load
+            playsInline // ✅ fixes iOS UX
+            loading="lazy" // ✅ hint for browsers
+            poster="/hero-bg-2.svg" // ✅ lightweight fallback
             aria-label={choice_video?.alternativeText || "Industry leaders video"}
           />
         ) : (

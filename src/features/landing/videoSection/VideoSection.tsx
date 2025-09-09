@@ -116,7 +116,7 @@ export default function VideoSection({
         )}
       </motion.div>
 
-      <div className="relative w-full max-w-5xl aspect-video rounded-2xl overflow-hidden shadow-2xl">
+      <div className="relative w-full max-w-4xl aspect-video rounded-2xl overflow-hidden shadow-2xl">
         {videoUrl ? (
           <video
             src={videoUrl} // ✅ Use the full Cloudinary URL directly

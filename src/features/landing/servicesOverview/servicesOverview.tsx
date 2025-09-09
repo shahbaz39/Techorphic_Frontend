@@ -1,8 +1,8 @@
 'use client';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'framer-motion';
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 
@@ -15,6 +15,7 @@ interface CaseStudyImage {
   id: number;
   case_studies_img: { url: string };
   case_studies_img_description: Array<{ children: Array<{ text: string }> }>;
+  case_studies_pdf?: { url: string };
 }
 
 interface CaseStudiesData {
@@ -45,10 +46,124 @@ interface ServicesOverviewProps {
   caseStudies?: CaseStudiesData | null;
 }
 
+// Case Study Modal Component
+const CaseStudyModal = ({ 
+  isOpen, 
+  onClose, 
+  caseStudy 
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  caseStudy: {
+    id: number;
+    title: string;
+    imageUrl: string;
+    pdfUrl: string | null;
+    description?: string;
+  } | null;
+}) => {
+  if (!caseStudy) return null;
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-70"
+          onClick={onClose}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="relative">
+              <button
+                onClick={onClose}
+                className="absolute top-4 right-4 z-10 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 cursor-pointer"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 text-gray-700"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+              
+              <div
+                className="h-64 bg-cover bg-center"
+                style={{ backgroundImage: `url('${caseStudy.imageUrl}')` }}
+              />
+              
+              <div className="p-6">
+                <h2 className="text-3xl font-bold mb-4 text-gray-800">
+                  {caseStudy.title}
+                </h2>
+                
+                <p className="text-gray-600 mb-6">
+                  {caseStudy.description || 'No description available.'}
+                </p>
+                
+                {caseStudy.pdfUrl && (
+                  <div className="mt-6">
+                    <a
+                      href={caseStudy.pdfUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                    >
+                      <svg
+                        className="w-5 h-5 mr-2"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                        />
+                      </svg>
+                      Download Full Case Study PDF
+                    </a>
+                  </div>
+                )}
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
 export default function ServicesOverview({
   data,
   caseStudies: caseStudiesProp,
 }: ServicesOverviewProps) {
+  // Add state for the modal
+  const [selectedCaseStudy, setSelectedCaseStudy] = useState<{
+    id: number;
+    title: string;
+    imageUrl: string;
+    pdfUrl: string | null;
+    description?: string;
+  } | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   // Refs for GSAP
   const sectionRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -113,20 +228,24 @@ export default function ServicesOverview({
       items: category.servicename?.map((service) => service.name.replace(/\n+/g, '').trim()) || [],
     })) || [];
 
-  const caseStudies = caseStudiesProp?.case_studie_Image?.map((study, index) => {
-    let size = 'small';
-    if (index === 0) size = 'large';
-    else if (index % 4 === 1 || index % 4 === 2) size = 'small';
-    else if (index % 4 === 3) size = 'custom-60';
-    else if (index % 4 === 0 && index > 0) size = 'custom-40';
+  // Case studies mapping
+  const caseStudies =
+    caseStudiesProp?.case_studie_Image?.map((image, index) => {
+      let size = 'small';
+      if (index === 0) size = 'large';
+      else if (index % 4 === 1 || index % 4 === 2) size = 'small';
+      else if (index % 4 === 3) size = 'custom-60';
+      else if (index % 4 === 0 && index > 0) size = 'custom-40';
 
-    return {
-      title: study.case_studies_img_description?.[0]?.children?.[0]?.text || 'Case Study',
-      size,
-      imageUrl: study.case_studies_img?.url || '/placeholder.svg?height=400&width=700',
-      pdfUrl: study.case_studies_pdf?.url || null, // ✅ Add PDF
-    };
-  });
+      return {
+        id: image.id,
+        title: image.case_studies_img_description?.[0]?.children?.[0]?.text || 'Case Study',
+        size,
+        imageUrl: image.case_studies_img?.url || '/placeholder.svg?height=400&width=700',
+        pdfUrl: image.case_studies_pdf?.url || null,
+        description: image.case_studies_img_description?.[0]?.children?.[1]?.text || '',
+      };
+    }) || [];
 
   // Animation variants
   const containerVariants = {
@@ -226,6 +345,12 @@ export default function ServicesOverview({
         duration: 0.1,
       },
     },
+  };
+
+  // Function to handle case study click
+  const handleCaseStudyClick = (study: any) => {
+    setSelectedCaseStudy(study);
+    setIsModalOpen(true);
   };
 
   return (
@@ -374,21 +499,25 @@ export default function ServicesOverview({
                   key={index}
                   variants={caseStudyVariants}
                   className={`
-                  rounded-xl p-6 flex flex-col justify-end relative
-                  ${study.size === 'large' ? 'md:col-span-10 h-[300px] md:h-[400px]' : ''}
-                  ${study.size === 'small' ? 'md:col-span-5 h-[200px] md:h-[300px]' : ''}
-                  ${study.size === 'custom-60' ? 'md:col-span-6 h-[200px] md:h-[300px]' : ''}
-                  ${study.size === 'custom-40' ? 'md:col-span-4 h-[200px] md:h-[300px]' : ''}
-                `}
+                    rounded-xl p-6 flex flex-col justify-end relative
+                    ${study.size === 'large' ? 'md:col-span-10 h-[300px] md:h-[400px]' : ''}
+                    ${study.size === 'small' ? 'md:col-span-5 h-[200px] md:h-[300px]' : ''}
+                    ${study.size === 'custom-60' ? 'md:col-span-6 h-[200px] md:h-[300px]' : ''}
+                    ${study.size === 'custom-40' ? 'md:col-span-4 h-[200px] md:h-[300px]' : ''}
+                  `}
                   style={{
                     backgroundImage: `url('${study.imageUrl}')`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                   }}
+                  onClick={() => handleCaseStudyClick(study)}
                 >
-                  {/* <div className="relative z-10 inline-block px-3 py-1 rounded-md bg-white/40">
-                    <p className="text-xl font-[600] text-black">{study.title}</p>
-                  </div> */}
+                  {/* Hover overlay effect */}
+                  <div className="absolute inset-0 bg-opacity-0 hover:bg-opacity-20 transition-all duration-300 flex items-end">
+                    <div className="p-4 text-white">
+                      {/* <p className="text-xl font-[600]">{study.title}</p> */}
+                    </div>
+                  </div>
                 </motion.div>
               ))}
             </motion.div>
@@ -414,6 +543,13 @@ export default function ServicesOverview({
           </motion.div>
         </div>
       </div>
+
+      {/* Case Study Modal */}
+      <CaseStudyModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        caseStudy={selectedCaseStudy}
+      />
     </div>
   );
 }

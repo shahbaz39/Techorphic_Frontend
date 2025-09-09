@@ -125,9 +125,9 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                           tech.icon?.data?.attributes?.alternativeText ||
                           tech.name
                         }
-                        width={20}
-                        height={20}
-                        className="h-6 w-auto object-contain" // ✅ maintain aspect ratio
+                        width={30}
+                        height={30}
+                        className="h-10 w-auto object-contain" // ✅ maintain aspect ratio
                       />
                     )}
                   </div>
@@ -135,7 +135,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
               })}
             </div>
 
-            <div className="grid grid-cols-8 mt-4">
+            <div className="grid grid-cols-8 mt-6">
               {technologies.slice(8, 16).map((tech) => {
                 const iconUrl = getIconUrl(tech.icon);
 
@@ -151,7 +151,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                         }
                         width={30}
                         height={30}
-                        className="h-6 w-auto object-contain" // ✅ maintain aspect ratio
+                        className="h-10 w-auto object-contain" // ✅ maintain aspect ratio
                       />
                     )}
                   </div>

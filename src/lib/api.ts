@@ -216,6 +216,26 @@ export const fetchServicesPage = async () => {
   }
 };
 
+
+// lib/api.ts
+export const fetchCaseStudyById = async (id: string) => {
+  try {
+    const homepage = await fetchHomepage();
+    
+    if (!homepage || !homepage.case_studie) return null;
+    
+    // Find the case study by ID
+    const caseStudy = homepage.case_studie.find(
+      (study: any) => study.id.toString() === id
+    );
+    
+    return caseStudy || null;
+  } catch (error) {
+    console.error("❌ Error fetching case study by ID:", error);
+    return null;
+  }
+};
+
 export const fetchGlobalData = async () => {
   try {
     const response = await api.get('/global', {

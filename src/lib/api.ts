@@ -45,8 +45,13 @@ export const fetchHomepage = async () => {
           },
 
           ClientTestimonial: {
-            populate: ['testimonialItem'],
+            populate: {
+              testimonialItem: {
+                populate: ['client_photo'], // ✅ now you get the image too
+              },
+            },
           },
+
           FAQSection: {
             populate: ['faqitem'],
           },
@@ -126,9 +131,10 @@ export const submitAuditRequest = async (formData) => {
   }
 };
 
+
 export const fetchBlogs = async () => {
   try {
-    const response = await api.get('/blogs', {
+    const response = await api.get('/blogs', {   // ✅ fix here
       params: {
         sort: ['date:desc'],
         populate: {
@@ -146,7 +152,7 @@ export const fetchBlogs = async () => {
 
 export const fetchBlogsPage = async () => {
   try {
-    const response = await api.get('/blogs-page', {
+    const response = await api.get('/blogs-page', {  // ✅ fix here
       params: { populate: '*' },
     });
     console.log('✅ blog-main-page:', response);
@@ -216,22 +222,19 @@ export const fetchServicesPage = async () => {
   }
 };
 
-
 // lib/api.ts
 export const fetchCaseStudyById = async (id: string) => {
   try {
     const homepage = await fetchHomepage();
-    
+
     if (!homepage || !homepage.case_studie) return null;
-    
+
     // Find the case study by ID
-    const caseStudy = homepage.case_studie.find(
-      (study: any) => study.id.toString() === id
-    );
-    
+    const caseStudy = homepage.case_studie.find((study: any) => study.id.toString() === id);
+
     return caseStudy || null;
   } catch (error) {
-    console.error("❌ Error fetching case study by ID:", error);
+    console.error('❌ Error fetching case study by ID:', error);
     return null;
   }
 };

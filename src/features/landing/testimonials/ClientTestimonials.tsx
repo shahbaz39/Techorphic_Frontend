@@ -1,39 +1,68 @@
-'use client';
-import { useState, useEffect, useRef } from 'react';
-import { motion, useInView, AnimatePresence } from 'framer-motion';
+"use client"
+import { useState, useEffect, useRef } from "react"
+import { motion, useInView, AnimatePresence } from "framer-motion"
 
-export default function ClientTestimonials() {
-  const testimonials = [
-    {
-      text: 'At Techorphic Developers, nothing speaks louder than the success stories of our clients. Hear directly from some of our valued partners about their experience collaborating with us.',
-      clientLogo: '/placeholder.svg?height=40&width=100&text=ADAWK&bg=000&color=fff',
-      clientName: 'Alyan Shahzad',
-      clientTitle: 'CEO',
-    },
-    {
-      text: 'Working with Techorphic Developers was a game-changer for our business. Their expertise and dedication helped us achieve our goals efficiently and effectively.',
-      clientLogo: '/placeholder.svg?height=40&width=100&text=CompanyB&bg=000&color=fff',
-      clientName: 'Jane Doe',
-      clientTitle: 'CTO, Innovate Corp',
-    },
-    {
-      text: 'The team at Techorphic Developers delivered an outstanding product that exceeded our expectations. Their communication and professionalism were top-notch throughout the project.',
-      clientLogo: '/placeholder.svg?height=40&width=100&text=GlobalTech&bg=000&color=fff',
-      clientName: 'John Smith',
-      clientTitle: 'Founder, GlobalTech Solutions',
-    },
-  ];
+interface TestimonialProps {
+  testimonials: any[]
+}
 
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: false, threshold: 0.1 });
+export default function ClientTestimonials({ testimonials = [] }: TestimonialProps) {
+  const extractTextFromRichText = (richTextArray: any[]) => {
+    if (!richTextArray || !Array.isArray(richTextArray)) return ""
+
+    return richTextArray
+      .map((paragraph: any) => {
+        if (paragraph.children && Array.isArray(paragraph.children)) {
+          return paragraph.children.map((child: any) => child.text || "").join("")
+        }
+        return ""
+      })
+      .join(" ")
+  }
+
+  const transformedTestimonials = testimonials.map((testimonial: any) => ({
+    text: extractTextFromRichText(testimonial.testimonial_text),
+    clientPhoto: testimonial.client_photo?.url
+      ? `${testimonial.client_photo.url}`
+      : "/placeholder.svg?height=80&width=80&text=User&bg=gray&color=white",
+    clientName: testimonial.client_name || "Anonymous",
+    clientTitle: testimonial.client_role || "Client",
+  }))
+
+  const displayTestimonials =
+    transformedTestimonials.length > 0
+      ? transformedTestimonials
+      : [
+          {
+            text: "At Techorphic Developers, nothing speaks louder than the success stories of our clients. Hear directly from some of our valued partners about their experience collaborating with us.",
+            clientPhoto: "/placeholder.svg?height=80&width=80&text=AS&bg=gray&color=white",
+            clientName: "Alyan Shahzad",
+            clientTitle: "CEO",
+          },
+          {
+            text: "Working with Techorphic Developers was a game-changer for our business. Their expertise and dedication helped us achieve our goals efficiently and effectively.",
+            clientPhoto: "/placeholder.svg?height=80&width=80&text=JD&bg=gray&color=white",
+            clientName: "Jane Doe",
+            clientTitle: "CTO, Innovate Corp",
+          },
+          {
+            text: "The team at Techorphic Developers delivered an outstanding product that exceeded our expectations. Their communication and professionalism were top-notch throughout the project.",
+            clientPhoto: "/placeholder.svg?height=80&width=80&text=JS&bg=gray&color=white",
+            clientName: "John Smith",
+            clientTitle: "Founder, GlobalTech Solutions",
+          },
+        ]
+
+  const [currentSlide, setCurrentSlide] = useState(0)
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: false, threshold: 0.1 })
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % testimonials.length);
-    }, 9000);
-    return () => clearInterval(interval);
-  }, [testimonials.length]);
+      setCurrentSlide((prev) => (prev + 1) % displayTestimonials.length)
+    }, 9000)
+    return () => clearInterval(interval)
+  }, [displayTestimonials.length])
 
   // Animation variants
   const containerVariants = {
@@ -45,7 +74,7 @@ export default function ClientTestimonials() {
         staggerChildren: 0.2,
       },
     },
-  };
+  }
 
   const headerVariants = {
     hidden: { opacity: 0, y: -30 },
@@ -54,10 +83,10 @@ export default function ClientTestimonials() {
       y: 0,
       transition: {
         duration: 0.8,
-        ease: 'easeOut',
+        ease: "easeOut",
       },
     },
-  };
+  }
 
   const braceVariants = {
     hidden: { opacity: 0, scale: 0.8 },
@@ -66,11 +95,11 @@ export default function ClientTestimonials() {
       scale: 1,
       transition: {
         duration: 0.8,
-        ease: 'easeOut',
+        ease: "easeOut",
         delay: 0.4,
       },
     },
-  };
+  }
 
   const testimonialVariants = {
     enter: {
@@ -83,7 +112,7 @@ export default function ClientTestimonials() {
       opacity: 1,
       transition: {
         duration: 0.5,
-        ease: 'easeOut',
+        ease: "easeOut",
       },
     },
     exit: {
@@ -92,10 +121,10 @@ export default function ClientTestimonials() {
       opacity: 0,
       transition: {
         duration: 0.5,
-        ease: 'easeOut',
+        ease: "easeOut",
       },
     },
-  };
+  }
 
   const indicatorVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -107,7 +136,7 @@ export default function ClientTestimonials() {
         delay: 0.8,
       },
     },
-  };
+  }
 
   return (
     <motion.div
@@ -116,15 +145,15 @@ export default function ClientTestimonials() {
       style={{ backgroundImage: "url('/features-bg.svg')" }}
       variants={containerVariants}
       initial="hidden"
-      animate={isInView ? 'visible' : 'hidden'}
+      animate={isInView ? "visible" : "hidden"}
     >
       {/* Grid background pattern */}
       <div
         className="absolute inset-0 opacity-20"
         style={{
           backgroundImage:
-            'linear-gradient(to right, #333 1px, transparent 1px), linear-gradient(to bottom, #333 1px, transparent 1px)',
-          backgroundSize: '30px 30px sm:40px 40px lg:50px 50px',
+            "linear-gradient(to right, #333 1px, transparent 1px), linear-gradient(to bottom, #333 1px, transparent 1px)",
+          backgroundSize: "30px 30px sm:40px 40px lg:50px 50px",
         }}
       />
 
@@ -132,7 +161,7 @@ export default function ClientTestimonials() {
         {/* Header Section */}
         <motion.div className="mb-8 sm:mb-12 lg:mb-16" variants={headerVariants}>
           <motion.h2
-            className="text-2xl sm:text-3xl md:text-4xl font-overcame lg:text-5xl xl:text-6xl font-extrabold mb-2 sm:mb-4 uppercase tracking-wide sm:tracking-wider lg:tracking-widest font-mono leading-tight"
+            className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-overcame lg:text-5xl xl:text-6xl font-extrabold mb-2 sm:mb-4 uppercase tracking-wide sm:tracking-wider lg:tracking-widest font-mono leading-tight"
             initial={{ opacity: 0, y: -20 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
             transition={{ duration: 0.6, delay: 0.2 }}
@@ -162,12 +191,12 @@ export default function ClientTestimonials() {
                 rotateY: [0, 10, 0],
                 transition: {
                   duration: 4,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: "easeInOut",
                 },
               }}
             >
-              {'}'}
+              {"}"}
             </motion.span>
           </motion.div>
 
@@ -196,7 +225,7 @@ export default function ClientTestimonials() {
                     transition={{ duration: 0.6, delay: 0.2 }}
                   >
                     <p className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl leading-relaxed max-w-xs sm:max-w-md md:max-w-lg lg:max-w-2xl xl:max-w-4xl mx-auto px-2">
-                      {testimonials[currentSlide].text}
+                      {displayTestimonials[currentSlide].text}
                     </p>
                   </motion.div>
 
@@ -207,22 +236,29 @@ export default function ClientTestimonials() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.4 }}
                   >
-                    {/* Logo Placeholder */}
                     <motion.div
-                      className="w-20 h-8 sm:w-24 sm:h-10 lg:w-28 lg:h-12 bg-gray-800 rounded-md flex items-center justify-center border border-gray-700"
+                      className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-full overflow-hidden border-2 border-[#33E2B4] flex items-center justify-center bg-gray-800"
                       whileHover={{ scale: 1.05 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <span className="text-xs sm:text-sm text-white font-mono">LOGO</span>
+                      <img
+                        src={displayTestimonials[currentSlide].clientPhoto || "/placeholder.svg"}
+                        alt={`${displayTestimonials[currentSlide].clientName} photo`}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement
+                          target.src = "/placeholder.svg?height=80&width=80&text=User&bg=gray&color=white"
+                        }}
+                      />
                     </motion.div>
 
                     {/* Client Details */}
                     <div className="text-center sm:text-left">
                       <p className="text-sm sm:text-base lg:text-lg font-semibold text-white">
-                        {testimonials[currentSlide].clientName}
+                        {displayTestimonials[currentSlide].clientName}
                       </p>
                       <p className="text-xs sm:text-sm lg:text-base text-gray-400 mt-1">
-                        {testimonials[currentSlide].clientTitle}
+                        {displayTestimonials[currentSlide].clientTitle}
                       </p>
                     </div>
                   </motion.div>
@@ -242,12 +278,12 @@ export default function ClientTestimonials() {
                 rotateY: [0, -10, 0],
                 transition: {
                   duration: 4,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: "easeInOut",
                 },
               }}
             >
-              {'{'}
+              {"{"}
             </motion.span>
           </motion.div>
         </div>
@@ -257,11 +293,11 @@ export default function ClientTestimonials() {
           className="flex justify-center mt-8 sm:mt-10 lg:mt-12 space-x-2 sm:space-x-3"
           variants={indicatorVariants}
         >
-          {testimonials.map((_, index) => (
+          {displayTestimonials.map((_, index) => (
             <motion.button
               key={index}
               className={`w-2 h-2 sm:w-2 sm:h-2 lg:w-2 lg:h-2 transition-all duration-300 ${
-                index === currentSlide ? 'bg-[#00A77B] scale-110' : 'bg-white hover:bg-gray-300'
+                index === currentSlide ? "bg-[#00A77B] scale-110" : "bg-white hover:bg-gray-300"
               }`}
               onClick={() => setCurrentSlide(index)}
               aria-label={`Go to slide ${index + 1}`}
@@ -283,7 +319,7 @@ export default function ClientTestimonials() {
         >
           <motion.button
             onClick={() =>
-              setCurrentSlide((prev) => (prev - 1 + testimonials.length) % testimonials.length)
+              setCurrentSlide((prev) => (prev - 1 + displayTestimonials.length) % displayTestimonials.length)
             }
             className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-white hover:bg-gray-700 transition-colors"
             aria-label="Previous testimonial"
@@ -293,7 +329,7 @@ export default function ClientTestimonials() {
             ←
           </motion.button>
           <motion.button
-            onClick={() => setCurrentSlide((prev) => (prev + 1) % testimonials.length)}
+            onClick={() => setCurrentSlide((prev) => (prev + 1) % displayTestimonials.length)}
             className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-white hover:bg-gray-700 transition-colors"
             aria-label="Next testimonial"
             whileHover={{ scale: 1.1 }}
@@ -304,5 +340,5 @@ export default function ClientTestimonials() {
         </motion.div>
       </div>
     </motion.div>
-  );
+  )
 }

@@ -12,7 +12,7 @@ export default function Footer({ footer }: { footer: any }) {
   if (!footer) return null; // wait for Strapi data
 
   return (
-    <footer className="relative w-full bg-[#00FFBC] text-black">
+    <footer className="relative w-full bg-[#11E5AD] text-black">
       <div className="max-w-7xl mx-auto">
         {/* Company Name */}
         <div className="px-4 sm:px-6 lg:px-8">
@@ -27,8 +27,7 @@ export default function Footer({ footer }: { footer: any }) {
             {/* Company Info */}
             <div className="col-span-1 sm:col-span-2 lg:col-span-2 flex flex-col">
               <p className="text-sm sm:text-base lg:text-lg leading-relaxed max-w-full sm:max-w-md lg:max-w-lg pr-0 sm:pr-4 lg:pr-8">
-                {footer.description ||
-                  ``}
+                {footer.description || ``}
               </p>
             </div>
 
@@ -70,7 +69,7 @@ export default function Footer({ footer }: { footer: any }) {
                     rel="noopener noreferrer"
                     className="bg-black text-[#22CDA0] flex-1 sm:flex-none sm:w-32 lg:w-36 py-2 sm:py-3 rounded-md text-sm sm:text-base font-semibold shadow-lg hover:bg-gray-800 transition-colors duration-200 text-center"
                   >
-                   {link.platform_name}
+                    {link.platform_name}
                   </a>
                 )) || (
                   <>
@@ -92,7 +91,7 @@ export default function Footer({ footer }: { footer: any }) {
           {/* To Top Button */}
           <button
             onClick={scrollToTop}
-            className="absolute right-4 sm:right-6 lg:right-8 bottom-4 sm:bottom-6 lg:bottom-8 xl:-bottom-16 bg-black text-white w-6 sm:w-7 lg:w-8 h-16 sm:h-20 lg:h-24 rounded-xl sm:rounded-2xl flex flex-col items-center justify-center text-xs sm:text-sm uppercase font-semibold shadow-lg hover:bg-gray-800 transition-colors duration-200"
+            className="fixed right-4 sm:right-6 lg:right-8 bottom-4 sm:bottom-6 lg:bottom-8 bg-black text-white w-6 sm:w-7 lg:w-8 h-16 sm:h-20 lg:h-24 rounded-xl sm:rounded-2xl flex flex-col items-center justify-center text-xs sm:text-sm uppercase font-semibold shadow-lg hover:bg-gray-800 transition-colors duration-200 z-50"
             aria-label="Scroll to top"
           >
             <ArrowUp className="w-3 h-3 sm:w-4 sm:h-4 mb-1" />

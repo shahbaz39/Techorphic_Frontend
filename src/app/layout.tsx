@@ -35,6 +35,7 @@ export default function RootLayout({
   const [footerData, setFooterData] = useState<any>(null);
   const [faqData, setFaqData] = useState<any[]>([]);
   const [faqTitle, setFaqTitle] = useState<string>('FAQS');
+  const [testimonials, setTestimonials] = useState<any[]>([]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -57,6 +58,11 @@ export default function RootLayout({
         setFaqData(faqSection.faqitem || []);
         setFaqTitle(faqSection.title || 'FAQS');
       }
+      if (data?.ClientTestimonial) {
+        const testimonialsData = data.ClientTestimonial.testimonialItem || [];
+        console.log('✅ Client Testimonials from Strapi:', testimonialsData); // 👈 log here
+        setTestimonials(testimonialsData);
+      }
     });
 
     // Cleanup
@@ -72,11 +78,11 @@ export default function RootLayout({
           }`}
           style={{ top: 0 }}
         >
-          <button className="mx-3 py-3 text-white">Menu</button>
+          {/* <button className="mx-3 py-3 text-white">Menu</button> */}
         </div>
 
         {children}
-        <ClientTestimonials />
+        <ClientTestimonials testimonials={testimonials} />
         <FreeAuditForm />
         {/* ✅ Pass FAQ data safely */}
         <FAQsSection faqs={faqData} title={faqTitle} />

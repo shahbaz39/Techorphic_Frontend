@@ -1,5 +1,4 @@
-// app/page.tsx (or wherever your page file is)
-
+// app/page.tsx
 import { fetchHomepage } from '@/lib/api';
 import HeroSection from '@/features/landing/hero/HeroSection';
 import IndustryLeaders from '@/features/landing/industryLeaders/IndustryLeaders';
@@ -11,8 +10,48 @@ import WhoWeAre from '@/features/landing/whoweare/WhoWeAre';
 import FocusedAreasCards from '@/features/landing/whoweare/FocusedAreasCards';
 import PageWrapper from './PageWrapper';
 import ClientTestimonials from '@/features/landing/testimonials/ClientTestimonials';
+import Script from "next/script";
 
 export const revalidate = 60;
+
+// ✅ Page Metadata (SEO)
+export const metadata = {
+  title: "Techorphic | Scalable Software Development Services",
+  description:
+    "Techorphic delivers scalable, intuitive solutions — from apps processing 1M+ payments monthly to healthcare tools speeding up signups by 40%.",
+  keywords: [
+    "Techorphic",
+    "software development",
+    "custom apps",
+    "scalable solutions",
+    "healthcare software",
+    "enterprise applications",
+  ],
+  openGraph: {
+    title: "Techorphic | Scalable Software Development",
+    description:
+      "We build scalable, intuitive apps that power growth — from fintech to healthcare and beyond.",
+    url: "https://your-domain.com",
+    siteName: "Techorphic",
+    images: [
+      {
+        url: "https://your-domain.com/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Techorphic Software Solutions",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Techorphic | Scalable Software Development",
+    description:
+      "Apps processing over 1M payments monthly and tools boosting healthcare signups by 40%.",
+    images: ["https://your-domain.com/og-image.jpg"],
+  },
+};
 
 export default async function Home() {
   const homepageData = await fetchHomepage();
@@ -22,9 +61,8 @@ export default async function Home() {
   }
 
   const industryLeadersData = homepageData.IndustryLeadersChoiceSection;
-  // const whoWeAreData = homepageData.WhoWeAre;
 
-  const whoWeAreRaw = homepageData.WhoWeAre?.[0]; // unwrap array
+  const whoWeAreRaw = homepageData.WhoWeAre?.[0];
   const whoWeAreData = whoWeAreRaw
     ? {
         title: whoWeAreRaw.title,
@@ -34,22 +72,32 @@ export default async function Home() {
         final_paragraph: whoWeAreRaw.paragraph_4?.[0]?.children?.[0]?.text || '',
       }
     : null;
-  // ✅ unwrap CoreSolution (it’s an array of length 1)
+
   const coreSolutionData = homepageData.CoreSolution?.[0] || null;
-
   const caseStudiesData = homepageData.case_studie?.[0] || null;
-  // console.log("Case studies -->", caseStudiesData)
- if (caseStudiesData?.case_studie_Image) {
-  caseStudiesData.case_studie_Image.forEach((img: any) => {
-    console.log('Cloudinary URL -->', img.case_studies_img?.url);
-    console.log('Description -->', img.case_studies_img_description?.[0]?.children?.[0]?.text);
-    console.log('Pdf -->', img.case_studies_pdf?.url); // now should work 🚀
-  });
- }
-
 
   return (
     <PageWrapper>
+      {/* ✅ JSON-LD Schema (safe with next/script) */}
+      <Script
+        id="ld-json-schema"
+        type="application/ld+json"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: "Techorphic",
+            url: "https://your-domain.com",
+            logo: "https://your-domain.com/logo.png",
+            sameAs: [
+              "https://linkedin.com/company/techorphic",
+              "https://twitter.com/techorphic",
+            ],
+          }),
+        }}
+      />
+
       {/* HERO SECTION */}
       <div
         className="min-h-[100vh] w-full bg-cover bg-center relative"
@@ -109,7 +157,7 @@ export default async function Home() {
       {coreSolutionData && (
         <ServicesOverview
           data={coreSolutionData}
-          caseStudies={caseStudiesData} // ✅ pass case studies here
+          caseStudies={caseStudiesData}
         />
       )}
     </PageWrapper>

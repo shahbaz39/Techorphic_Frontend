@@ -123,7 +123,7 @@ export default function CaseStudyDetail({ id }: { id: string }) {
 
   if (error || !caseStudy) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center ">
         <div className="text-xl text-red-500">{error || 'Case study not found'}</div>
         <button 
           onClick={() => router.back()}

@@ -55,7 +55,7 @@ export default async function Page({ params }: PageProps) {
         <Navbar />
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-10">
+      <div className="max-w-7xl mx-auto px-6 py-2 sm:py-8">
         <div>
           <h1 className="text-4xl md:text-5xl font-[400] mt-10 font-overcame text-black mb-4 leading-tight">
             {selectedBlog.title}
@@ -69,7 +69,7 @@ export default async function Page({ params }: PageProps) {
               src={thumbnailUrl}
               width={1000}
               height={400}
-              className="w-full rounded-2xl h-[80vh] object-cover"
+              className="w-full rounded-2xl h-[40vh] sm:h-[80vh] object-cover"
             />
           )}
 

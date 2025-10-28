@@ -91,8 +91,8 @@ export default function Footer({ footer }: { footer: any }) {
           {/* To Top Button */}
           <button
             onClick={scrollToTop}
-            className="fixed right-4 sm:right-6 lg:right-8 bottom-4 sm:bottom-6 lg:bottom-8 bg-black text-white w-6 sm:w-7 lg:w-8 h-16 sm:h-20 lg:h-24 rounded-xl sm:rounded-2xl flex flex-col items-center justify-center text-xs sm:text-sm uppercase font-semibold shadow-lg hover:bg-gray-800 transition-colors duration-200 z-50"
-            aria-label="Scroll to top"
+            className="fixed right-4 sm:right-6 lg:right-8 bottom-4 sm:bottom-6 lg:bottom-8 bg-black text-white w-6 sm:w-7 lg:w-8 h-16 sm:h-20 lg:h-24 rounded-xl sm:rounded-2xl flex flex-col items-center justify-center text-xs sm:text-sm uppercase font-semibold shadow-lg hover:bg-gray-800 transition-colors duration-200 z-50 cursor-pointer"
+            aria-label="Scroll to top "
           >
             <ArrowUp className="w-3 h-3 sm:w-4 sm:h-4 mb-1" />
             <span

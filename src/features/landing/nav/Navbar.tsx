@@ -43,34 +43,24 @@ const Navbar = () => {
             Home
           </Link>
           <Link
-            href="/about"
+            href="/services"
             className="text-[#323232] hover:text-gray-900 font-[700] transition-colors whitespace-nowrap"
           >
-            About
+            Services
           </Link>
           <Link
-            href="/software-development"
+            href="/blogs"
             className="text-[#323232] hover:text-gray-900 font-[700] transition-colors whitespace-nowrap"
           >
-            Software Development
+            Blogs
           </Link>
+
+          
           <Link
-            href="/mobile-app-development"
+            href="/free-audit"
             className="text-[#323232] hover:text-gray-900 font-[700] transition-colors whitespace-nowrap"
           >
-            Mobile App Development
-          </Link>
-          <Link
-            href="/ui-ux-design"
-            className="text-[#323232] hover:text-gray-900 font-[700] transition-colors whitespace-nowrap"
-          >
-            UI/UX Design
-          </Link>
-          <Link
-            href="/case-study"
-            className="text-[#323232] hover:text-gray-900 font-[700] transition-colors whitespace-nowrap"
-          >
-            Case Study
+            Contact Us
           </Link>
         </div>
 
@@ -130,40 +120,33 @@ const Navbar = () => {
               Home
             </Link>
             <Link
-              href="/about"
+              href="/services"
               className="text-[#323232] hover:text-gray-900 font-[700] py-2 px-2 transition-colors"
               onClick={closeMobileMenu}
             >
-              About
+              Services
             </Link>
             <Link
-              href="/software-development"
+              href="/blogs"
               className="text-[#323232] hover:text-gray-900 font-[700] py-2 px-2 transition-colors"
               onClick={closeMobileMenu}
             >
-              Software Development
+              Blogs
             </Link>
             <Link
-              href="/mobile-app-development"
-              className="text-[#323232] hover:text-gray-900 font-[700] py-2 px-2 transition-colors"
-              onClick={closeMobileMenu}
+              href="/free-audit"
+              className="text-[#323232] hover:text-gray-900 font-[700] transition-colors whitespace-nowrap"
             >
-              Mobile App Development
+              Who we are
             </Link>
             <Link
-              href="/ui-ux-design"
+              href="/free-audit"
               className="text-[#323232] hover:text-gray-900 font-[700] py-2 px-2 transition-colors"
               onClick={closeMobileMenu}
             >
-              UI/UX Design
+              Contact Us
             </Link>
-            <Link
-              href="/case-study"
-              className="text-[#323232] hover:text-gray-900 font-[700] py-2 px-2 transition-colors"
-              onClick={closeMobileMenu}
-            >
-              Case Study
-            </Link>
+
             <div className="pt-2">
               <Link href="/contact" onClick={closeMobileMenu}>
                 <LETSDISCUSS />

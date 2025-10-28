@@ -133,12 +133,7 @@ const Navbar = () => {
             >
               Blogs
             </Link>
-            <Link
-              href="/free-audit"
-              className="text-[#323232] hover:text-gray-900 font-[700] transition-colors whitespace-nowrap"
-            >
-              Who we are
-            </Link>
+           
             <Link
               href="/free-audit"
               className="text-[#323232] hover:text-gray-900 font-[700] py-2 px-2 transition-colors"

@@ -83,7 +83,7 @@ export default function RootLayout({
 
         {children}
         <ClientTestimonials testimonials={testimonials} />
-        <FreeAuditForm />
+        {/* <FreeAuditForm /> */}
         {/* ✅ Pass FAQ data safely */}
         <FAQsSection faqs={faqData} title={faqTitle} />
         {/* ✅ Pass footer data safely */}

@@ -45,9 +45,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
     if (typeof richText === 'string') return richText;
     if (Array.isArray(richText)) {
       return richText
-        .map((block: any) =>
-          block.children?.map((child: any) => child.text).join('')
-        )
+        .map((block: any) => block.children?.map((child: any) => child.text).join(''))
         .join(' ');
     }
     return '';
@@ -64,10 +62,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   };
 
   return (
-    <section
-      className="w-full px-6 py-16 pb-[8rem]"
-      aria-labelledby="hero-heading"
-    >
+    <section className="w-full px-6 py-16 pb-[8rem]" aria-labelledby="hero-heading">
       <div className="max-w-7xl mx-auto">
         {/* Main Content Grid */}
         <div className="flex flex-col w-full justify-between">
@@ -77,8 +72,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
               id="hero-heading"
               className="font-normal leading-[80px] md:text-[68px] text-[40px] hidden md:block tracking-[-0.017em] text-[#020209] max-w-[460px]"
               style={{
-                fontFamily:
-                  'Overcame Demo, system-ui, -apple-system, sans-serif',
+                fontFamily: 'Overcame Demo, system-ui, -apple-system, sans-serif',
                 textShadow: '4px 4px 4px rgba(0, 0, 0, 0.25)',
                 verticalAlign: 'middle',
               }}
@@ -91,8 +85,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           <h1
             className="block md:hidden text-5xl"
             style={{
-              fontFamily:
-                'Overcame Demo, system-ui, -apple-system, sans-serif',
+              fontFamily: 'Overcame Demo, system-ui, -apple-system, sans-serif',
               textShadow: '4px 4px 4px rgba(0, 0, 0, 0.25)',
               verticalAlign: 'middle',
             }}
@@ -104,9 +97,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           <div className="flex items-end md:justify-end transform md:-translate-y-13 mt-6 sm:mt-0">
             <div className="md:w-[35%]">
               {subtitle && (
-                <h2
-                  className="text-xl font-semibold mb-3 text-[#020209] md:text-right"
-                >
+                <h2 className="text-xl font-semibold mb-3 text-[#020209] md:text-right">
                   {subtitle}
                 </h2>
               )}
@@ -131,10 +122,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 const iconUrl = getIconUrl(tech.icon);
 
                 return (
-                  <div
-                    key={tech.id}
-                    className="flex items-center justify-center"
-                  >
+                  <div key={tech.id} className="flex items-center justify-center">
                     {iconUrl && (
                       <Image
                         src={iconUrl}
@@ -158,10 +146,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 const iconUrl = getIconUrl(tech.icon);
 
                 return (
-                  <div
-                    key={tech.id}
-                    className="flex items-center justify-center"
-                  >
+                  <div key={tech.id} className="flex items-center justify-center">
                     {iconUrl && (
                       <Image
                         src={iconUrl}
@@ -192,31 +177,34 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 
           {/* Static description */}
           <p className="font-[300] md:text-[36px] text-[30px] leading-[110%] tracking-[-1.7%] max-w-5xl">
-            Techorphic is a custom software development company that delivers
-            scalable, intuitive solutions — including apps processing over
-            1M+ monthly payments and healthcare platforms that cut sign-up
-            time by 40%. We&#39;re your success partner.
+            Techorphic is a custom software development company that delivers scalable, intuitive
+            solutions — including apps processing over 1M+ monthly payments and healthcare platforms
+            that cut sign-up time by 40%. We&#39;re your success partner.
           </p>
 
           {/* CTA Buttons */}
-          {ctaButtons.length > 0 && (
-            <div className="flex flex-col sm:flex-row gap-4 pt-8">
-              {ctaButtons.map((button) => (
-                <Link
-                  key={button.id}
-                  href={button.url}
-                  aria-label={`Navigate to ${button.label}`}
-                  className={`${
-                    button.is_highlighted
-                      ? 'bg-[#000000] text-[#fff]'
-                      : 'bg-[#00FFBC] text-[#000000]'
-                  } px-5 h-11 items-center justify-between flex rounded-md font-bold text-center`}
-                >
-                  {button.label}
-                </Link>
-              ))}
-            </div>
-          )}
+     {ctaButtons.length > 0 && (
+  <div className="flex flex-col sm:flex-row gap-4 pt-8">
+    {ctaButtons.map((button) => (
+      <Link
+        key={button.id}
+        href={button.url}
+        aria-label={`Navigate to ${button.label}`}
+        className={`
+          flex items-center justify-center
+          h-11 px-6 rounded-md font-bold text-center
+          ${button.is_highlighted
+            ? 'bg-black text-white'
+            : 'bg-[#00FFBC] text-black'
+          }
+        `}
+      >
+        {button.label}
+      </Link>
+    ))}
+  </div>
+)}
+
         </div>
       </div>
     </section>

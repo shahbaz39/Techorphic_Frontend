@@ -143,27 +143,28 @@ export default function TrustedBy({ brandItems = [], stats = [], brandLogos = []
           </p>
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8 sm:gap-12 lg:gap-16 xl:gap-32 mb-8 sm:mb-12 lg:mb-16 w-full max-w-7xl p-4 sm:p-6 lg:p-8">
-          {displayStats.map((stat, index) => {
-            const numericValue = Number.parseInt(stat.number.replace(/\D/g, "")) || 0
-            return (
-              <div
-                key={stat.id}
-                className="text-center flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-3 sm:gap-5 border-b pb-6 sm:pb-8 border-white w-full lg:w-[50%]"
-              >
-                <Counter from={0} to={numericValue} duration={2} delay={index * 0.2} />
-                <div
-                  className="text-white font-[300] text-center sm:text-left"
-                  style={{ fontSize: "clamp(20px, 4vw, 48px)" }}
-                >
-                  {stat.label.split(" ").map((word, wordIndex) => (
-                    <p key={wordIndex}>{word}</p>
-                  ))}
-                </div>
-              </div>
-            )
-          })}
+       <div className="flex flex-col lg:flex-row gap-12 lg:gap-24 w-full max-w-7xl p-6 lg:p-8">
+  {displayStats.map((stat, index) => {
+    const numericValue = Number.parseInt(stat.number.replace(/\D/g, "")) || 0;
+
+    return (
+      <div
+        key={stat.id}
+        className="flex items-start gap-6 border-b border-white pb-8 w-full lg:w-1/2"
+      >
+        <div className="text-white font-bold text-5xl">
+          <Counter from={0} to={numericValue} duration={2} delay={index * 0.2} />
+          
         </div>
+
+        <div className="text-white font-light leading-tight text-3xl">
+          {stat.label}
+        </div>
+      </div>
+    );
+  })}
+</div>
+
 
         <div className="w-full max-w-7xl">
           <Carousel

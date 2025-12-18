@@ -48,7 +48,7 @@ export default function Footer({ footer }: { footer: any }) {
                     href={`tel:${footer.phone || '+92 3231404885?'}`}
                     className="hover:underline transition-all duration-200 hover:text-gray-700"
                   >
-                    {footer.phone || '+92 308 6232 070'}
+                    {footer.phone || '+92 323 140 48 85'}
                   </a>
                 </p>
               </div>

@@ -35,7 +35,7 @@ const Navbar = () => {
         </div>
 
         {/* Desktop Navigation Links */}
-        <div className="hidden lg:flex items-center space-x-4 xl:space-x-6 text-[14px] xl:text-[15px]">
+        <div className="hidden lg:flex ml-auto items-center space-x-4 xl:space-x-6 text-[14px] xl:text-[15px] mr-20">
           <Link
             href="/"
             className="text-[#323232] hover:text-gray-900 font-[700] transition-colors whitespace-nowrap"
@@ -54,7 +54,6 @@ const Navbar = () => {
           >
             Blogs
           </Link>
-
           <Link
             href="/contact"
             className="text-[#323232] hover:text-gray-900 font-[700] transition-colors whitespace-nowrap"
@@ -64,7 +63,7 @@ const Navbar = () => {
         </div>
 
         {/* Desktop CTA Button */}
-        <div className="hidden lg:block flex-shrink-0">
+        <div className="hidden lg:block flex-shrink-0 ">
           <Link href="/contact">
             <LETSDISCUSS />
             {/* <button className="font-overcame bg-black rounded-md text-white font-bold pt-2 px-5">

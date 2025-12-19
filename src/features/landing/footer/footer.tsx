@@ -61,14 +61,7 @@ export default function Footer({ footer }: { footer: any }) {
             {/* Social Media Links */}
             <div className="col-span-1 flex flex-col space-y-3 sm:space-y-4 order-1 sm:order-none">
               <div className="flex flex-row sm:flex-col space-x-3 sm:space-x-0 sm:space-y-3 lg:space-y-4">
-                <a
-                  href="https://www.instagram.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-black text-[#22CDA0] flex-1 sm:flex-none sm:w-32 lg:w-36 py-2 sm:py-3 rounded-md text-sm sm:text-base font-semibold shadow-lg hover:bg-gray-800 transition-colors duration-200 text-center"
-                >
-                  Instagram
-                </a>
+               
 
                 <a
                   href="https://www.facebook.com/techorphic1/"
@@ -86,6 +79,14 @@ export default function Footer({ footer }: { footer: any }) {
                   className="bg-black text-[#22CDA0] flex-1 sm:flex-none sm:w-32 lg:w-36 py-2 sm:py-3 rounded-md text-sm sm:text-base font-semibold shadow-lg hover:bg-gray-800 transition-colors duration-200 text-center"
                 >
                   LinkedIn
+                </a>
+                 <a
+                  href="https://www.instagram.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-black text-[#22CDA0] flex-1 sm:flex-none sm:w-32 lg:w-36 py-2 sm:py-3 rounded-md text-sm sm:text-base font-semibold shadow-lg hover:bg-gray-800 transition-colors duration-200 text-center"
+                >
+                  Instagram
                 </a>
               </div>
             </div>

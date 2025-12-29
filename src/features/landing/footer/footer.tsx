@@ -53,16 +53,19 @@ export default function Footer({ footer }: { footer: any }) {
                 </p>
               </div>
 
-              <button className="bg-black text-white px-4 sm:px-6 py-2 sm:py-3 rounded-md text-sm sm:text-base font-semibold shadow-lg hover:bg-gray-800 transition-colors duration-200 w-fit mt-4 sm:mt-6 cursor-pointer">
+              <a
+                href="https://calendly.com/techorphic-sales/30min"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-black text-white px-4 sm:px-6 py-2 sm:py-3 rounded-md text-sm sm:text-base font-semibold shadow-lg hover:bg-gray-800 transition-colors duration-200 w-fit mt-4 sm:mt-6 cursor-pointer inline-block"
+              >
                 LET&apos;S DISCUSS
-              </button>
+              </a>
             </div>
 
             {/* Social Media Links */}
             <div className="col-span-1 flex flex-col space-y-3 sm:space-y-4 order-1 sm:order-none">
               <div className="flex flex-row sm:flex-col space-x-3 sm:space-x-0 sm:space-y-3 lg:space-y-4">
-               
-
                 <a
                   href="https://www.facebook.com/techorphic1/"
                   target="_blank"
@@ -80,7 +83,7 @@ export default function Footer({ footer }: { footer: any }) {
                 >
                   LinkedIn
                 </a>
-                 <a
+                <a
                   href="https://www.instagram.com/"
                   target="_blank"
                   rel="noopener noreferrer"

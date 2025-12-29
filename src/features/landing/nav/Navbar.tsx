@@ -64,12 +64,14 @@ const Navbar = () => {
 
         {/* Desktop CTA Button */}
         <div className="hidden lg:block flex-shrink-0 ">
-          <Link href="/contact">
+          <a
+            href="https://calendly.com/techorphic-sales/30min"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center h-[49px]"
+          >
             <LETSDISCUSS />
-            {/* <button className="font-overcame bg-black rounded-md text-white font-bold pt-2 px-5">
-              let&apos;s discuss
-            </button> */}
-          </Link>
+          </a>
         </div>
 
         {/* Mobile Menu Button */}

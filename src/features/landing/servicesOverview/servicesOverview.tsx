@@ -47,10 +47,10 @@ interface ServicesOverviewProps {
 }
 
 // Case Study Modal Component
-const CaseStudyModal = ({ 
-  isOpen, 
-  onClose, 
-  caseStudy 
+const CaseStudyModal = ({
+  isOpen,
+  onClose,
+  caseStudy,
 }: {
   isOpen: boolean;
   onClose: () => void;
@@ -101,21 +101,19 @@ const CaseStudyModal = ({
                   />
                 </svg>
               </button>
-              
+
               <div
                 className="h-64 bg-cover bg-center"
                 style={{ backgroundImage: `url('${caseStudy.imageUrl}')` }}
               />
-              
+
               <div className="p-6">
-                <h2 className="text-3xl font-bold mb-4 text-gray-800">
-                  {caseStudy.title}
-                </h2>
-                
+                <h2 className="text-3xl font-bold mb-4 text-gray-800">{caseStudy.title}</h2>
+
                 <p className="text-gray-600 mb-6">
                   {caseStudy.description || 'No description available.'}
                 </p>
-                
+
                 {caseStudy.pdfUrl && (
                   <div className="mt-6">
                     <a
@@ -472,74 +470,30 @@ export default function ServicesOverview({
 
           {/* Case Studies Section */}
           <motion.div
-            ref={caseStudiesRef}
-            initial="hidden"
-            animate={caseStudiesInView ? 'visible' : 'hidden'}
             variants={containerVariants}
+            className="grid grid-cols-1 md:grid-cols-10 gap-6 mb-16 max-w-7xl mx-auto"
           >
-            <motion.h2
-              variants={textRevealVariants}
-              className="text-4xl md:text-5xl font-bold mb-8 text-center text-gray-800 uppercase"
-            >
-              {caseStudiesProp?.title || 'Case Studies'}
-            </motion.h2>
-            <motion.p
-              variants={textRevealVariants}
-              className="mb-12 font-[400] text-xl md:text-2xl text-center text-gray-700"
-            >
-              {caseStudiesProp?.description || 'Our Work in Action'}
-            </motion.p>
-
-            <motion.div
-              variants={containerVariants}
-              className="grid grid-cols-1 md:grid-cols-10 gap-6 mb-16 max-w-7xl mx-auto cursor-pointer"
-            >
-              {caseStudies.map((study, index) => (
-                <motion.div
-                  key={index}
-                  variants={caseStudyVariants}
-                  className={`
-                    rounded-xl p-6 flex flex-col justify-end relative
-                    ${study.size === 'large' ? 'md:col-span-10 h-[300px] md:h-[400px]' : ''}
-                    ${study.size === 'small' ? 'md:col-span-5 h-[200px] md:h-[300px]' : ''}
-                    ${study.size === 'custom-60' ? 'md:col-span-6 h-[200px] md:h-[300px]' : ''}
-                    ${study.size === 'custom-40' ? 'md:col-span-4 h-[200px] md:h-[300px]' : ''}
-                  `}
-                  style={{
-                    backgroundImage: `url('${study.imageUrl}')`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                  }}
-                  onClick={() => handleCaseStudyClick(study)}
-                >
-                  {/* Hover overlay effect */}
-                  <div className="absolute inset-0 bg-opacity-0 hover:bg-opacity-20 transition-all duration-300 flex items-end">
-                    <div className="p-4 text-white">
-                      {/* <p className="text-xl font-[600]">{study.title}</p> */}
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-
-            {/* Bottom text and link */}
-            <motion.div variants={itemVariants} className="text-center">
-              <motion.p
-                className="text-xl md:text-2xl text-gray-700 mb-4"
-                variants={textRevealVariants}
+            {caseStudies.map((study, index) => (
+              <motion.div
+                key={index}
+                variants={caseStudyVariants}
+                className={`
+        rounded-xl overflow-hidden relative
+        ${study.size === 'large' ? 'md:col-span-10 h-[300px] md:h-[400px]' : ''}
+        ${study.size === 'small' ? 'md:col-span-5 h-[200px] md:h-[300px]' : ''}
+        ${study.size === 'custom-60' ? 'md:col-span-6 h-[200px] md:h-[300px]' : ''}
+        ${study.size === 'custom-40' ? 'md:col-span-4 h-[200px] md:h-[300px]' : ''}
+      `}
+                style={{
+                  backgroundImage: `url('${study.imageUrl}')`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                }}
               >
-                {caseStudiesProp?.case_studies_footer_description ||
-                  'We take your business as our personal and deliver more than beyond the boundaries'}
-              </motion.p>
-              <motion.div whileTap={{ scale: 0.95 }}>
-                <Link
-                  href={caseStudiesProp?.explore_button_link || '#'}
-                  className="text-xl md:text-2xl text-gray-800 underline underline-offset-4 hover:text-emerald-600 transition-colors duration-300"
-                >
-                  {caseStudiesProp?.explore_button || 'Explore Our Latest Projects'}
-                </Link>
+                {/* Optional overlay for better contrast (no interaction) */}
+                <div className="absolute inset-0 bg-black/10" />
               </motion.div>
-            </motion.div>
+            ))}
           </motion.div>
         </div>
       </div>

@@ -141,12 +141,13 @@ const Navbar = () => {
             >
               Contact Us
             </Link>
-
-            <div className="pt-2">
-              <Link href="/contact" onClick={closeMobileMenu}>
-                <LETSDISCUSS />
-              </Link>
-            </div>
+            <Link
+              href="/contact"
+              onClick={closeMobileMenu}
+              className="w-full flex items-center justify-center pt-2"
+            >
+              <LETSDISCUSS />
+            </Link>
           </div>
         </div>
       </div>

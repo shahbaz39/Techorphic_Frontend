@@ -6,6 +6,17 @@ import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
+// Hardcoded fallback images per sector, keyed by the Strapi card `title`.
+// Used only when the Solution card has no `img` uploaded in Strapi.
+// Drop your images into public/sectors/ using these exact filenames.
+const SECTOR_IMAGES: Record<string, string> = {
+  'Healthcare Solutions': '/sectors/healthcare.jpg',
+  'E-commerce & Retail': '/sectors/ecommerce.jpg',
+  'Financial Services': '/sectors/finance.jpg',
+  'Education & Learning': '/sectors/education.jpg',
+  'Tech Startups': '/sectors/tech-startups.jpg',
+};
+
 interface SolutionsCarouselProps {
   data: any;
 }
@@ -76,7 +87,8 @@ const SolutionsCarousel = ({ data }: SolutionsCarouselProps) => {
               {data?.title || 'SOLUTIONS WE HAVE PROVIDED'}
             </h2>
             <p className="text-xl md:text-2xl text-white max-w-2xl mx-auto leading-relaxed">
-              {data?.description || 'We Have Served Diverse Clientele with Web Development in Los Angeles'}
+              {data?.description ||
+                'We Have Served Diverse Clientele with Web Development in Los Angeles'}
             </p>
           </div>
 
@@ -119,14 +131,22 @@ const SolutionsCarousel = ({ data }: SolutionsCarouselProps) => {
                         <div className="space-y-3">
                           <div className="bg-[#00FFBC] rounded-2xl px-4 py-2 text-gray-900 shadow-lg">
                             <div className="flex items-center space-x-4 justify-between">
-                              <span className="text-4xl font-bold pb-6">{solution.years_stats}</span>
-                              <span className="text-xl leading-tight text-right">{solution.years_description}</span>
+                              <span className="text-4xl font-bold pb-6">
+                                {solution.years_stats}
+                              </span>
+                              <span className="text-xl leading-tight text-right">
+                                {solution.years_description}
+                              </span>
                             </div>
                           </div>
                           <div className="bg-[#00FFBC] rounded-2xl px-4 py-2 text-gray-900 shadow-lg">
                             <div className="flex items-center space-x-4 justify-between">
-                              <span className="text-4xl font-bold pb-6">{solution.clients_stats}</span>
-                              <span className="text-xl leading-tight text-right">{solution.clients_description}</span>
+                              <span className="text-4xl font-bold pb-6">
+                                {solution.clients_stats}
+                              </span>
+                              <span className="text-xl leading-tight text-right">
+                                {solution.clients_description}
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -135,17 +155,22 @@ const SolutionsCarousel = ({ data }: SolutionsCarouselProps) => {
                       {/* Right Image */}
                       <div className="flex items-center justify-center">
                         <div className="bg-gradient-to-br from-gray-400 to-gray-500 rounded-2xl w-full h-full flex items-center justify-center shadow-2xl transform relative overflow-hidden">
-                          {solution.img?.url ? (
-                            <img
-                              src={solution.img.url}
-                              alt={solution.title}
-                              className="w-full h-full object-cover rounded-2xl"
-                            />
-                          ) : (
-                            <span className="text-white text-2xl font-bold text-center px-8 relative z-10">
-                              Digital Solution
-                            </span>
-                          )}
+                          {(() => {
+                            // Strapi image first, then the hardcoded per-sector image.
+                            const imgSrc =
+                              solution.img?.url || SECTOR_IMAGES[solution.title?.trim()];
+                            return imgSrc ? (
+                              <img
+                                src={imgSrc}
+                                alt={solution.title}
+                                className="w-full h-full object-cover rounded-2xl"
+                              />
+                            ) : (
+                              <span className="text-white text-2xl font-bold text-center px-8 relative z-10">
+                                Digital Solution
+                              </span>
+                            );
+                          })()}
                         </div>
                       </div>
                     </div>

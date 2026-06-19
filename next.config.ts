@@ -12,16 +12,13 @@ const nextConfig: NextConfig = {
       {
         protocol: 'http',
         hostname: 'localhost',
-        port: '1337',
+        port: '1500',
       },
       {
         protocol: 'https',
         hostname: 'res.cloudinary.com', // ✅ Add this
       },
     ],
-  },
-  experimental: {
-    optimizePackageImports: ['@strapi/strapi'],
   },
   eslint: {
     ignoreDuringBuilds: true,

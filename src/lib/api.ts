@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { cache } from 'react';
 
 const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL;
 
@@ -9,7 +10,9 @@ const api = axios.create({
   },
 });
 
-export const fetchHomepage = async () => {
+// Wrapped in React cache() so multiple server-side callers in one render
+// (e.g. layout + page) share a single HTTP request instead of refetching.
+export const fetchHomepage = cache(async () => {
   try {
     const response = await api.get('/homepage', {
       params: {
@@ -82,7 +85,7 @@ export const fetchHomepage = async () => {
     console.error('❌ Error fetching homepage:', error.response?.data || error);
     return null;
   }
-};
+});
 
 export const submitAuditRequest = async (formData) => {
   try {
@@ -131,10 +134,10 @@ export const submitAuditRequest = async (formData) => {
   }
 };
 
-
 export const fetchBlogs = async () => {
   try {
-    const response = await api.get('/blogs', {   // ✅ fix here
+    const response = await api.get('/blogs', {
+      // ✅ fix here
       params: {
         sort: ['date:desc'],
         populate: {
@@ -152,7 +155,8 @@ export const fetchBlogs = async () => {
 
 export const fetchBlogsPage = async () => {
   try {
-    const response = await api.get('/blogs-page', {  // ✅ fix here
+    const response = await api.get('/blogs-page', {
+      // ✅ fix here
       params: { populate: '*' },
     });
     console.log('✅ blog-main-page:', response);
@@ -213,7 +217,7 @@ export const fetchServicesPage = async () => {
 
     console.log('✅ Fetched services page -->:', data);
     return data;
-  } catch (error: any) {
+  } catch (error) {
     console.error(
       '❌ Error fetching services page:',
       error.response?.data || error.message || error,
@@ -230,7 +234,7 @@ export const fetchCaseStudyById = async (id: string) => {
     if (!homepage || !homepage.case_studie) return null;
 
     // Find the case study by ID
-    const caseStudy = homepage.case_studie.find((study: any) => study.id.toString() === id);
+    const caseStudy = homepage.case_studie.find((study) => study.id.toString() === id);
 
     return caseStudy || null;
   } catch (error) {

@@ -1,34 +1,34 @@
-"use client"
-import { motion } from "framer-motion"
-import { useInView } from "framer-motion"
-import { useRef } from "react"
+'use client';
+import { motion } from 'framer-motion';
+import { useInView } from 'framer-motion';
+import { useRef } from 'react';
 
 interface VideoSectionProps {
-  top_headline?: string
-  bottom_headline?: string
+  top_headline?: string;
+  bottom_headline?: string;
   footer_description?: Array<{
-    type: string
-    children: Array<{ text: string; type: string }>
-  }>
+    type: string;
+    children: Array<{ text: string; type: string }>;
+  }>;
   choice_video?: {
-    url: string
-    alternativeText?: string
-  }
+    url: string;
+    alternativeText?: string;
+  };
 }
 
 const parseRichText = (
   richTextArray?: Array<{
-    type: string
-    children: Array<{ text: string; type: string }>
+    type: string;
+    children: Array<{ text: string; type: string }>;
   }>,
 ): string => {
-  if (!richTextArray || !Array.isArray(richTextArray)) return ""
+  if (!richTextArray || !Array.isArray(richTextArray)) return '';
 
   return richTextArray
-    .map((block) => block.children?.map((child) => child.text || "").join(" "))
+    .map((block) => block.children?.map((child) => child.text || '').join(' '))
     .filter((text) => text.trim())
-    .join(" ")
-}
+    .join(' ');
+};
 
 export default function VideoSection({
   top_headline,
@@ -36,8 +36,8 @@ export default function VideoSection({
   footer_description,
   choice_video,
 }: VideoSectionProps) {
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: false, threshold: 0.1 })
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: false, threshold: 0.1 });
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -48,7 +48,7 @@ export default function VideoSection({
         staggerChildren: 0.2,
       },
     },
-  }
+  };
 
   const itemVariants = {
     hidden: { opacity: 0, y: -30 },
@@ -57,22 +57,22 @@ export default function VideoSection({
       y: 0,
       transition: {
         duration: 0.6,
-        ease: "easeOut",
+        ease: 'easeOut',
       },
     },
-  }
+  };
 
   // ✅ Use the full Cloudinary URL as-is
-  const videoUrl = choice_video?.url || null
+  const videoUrl = choice_video?.url || null;
 
-  const parsedFooterDescription = parseRichText(footer_description)
+  const parsedFooterDescription = parseRichText(footer_description);
 
   if (!top_headline && !bottom_headline && !choice_video) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-gray-600 text-xl">Loading video section...</div>
       </div>
-    )
+    );
   }
 
   return (
@@ -81,13 +81,13 @@ export default function VideoSection({
       className="md:min-h-screen w-full flex flex-col items-center justify-center px-4 py-20"
       style={{
         backgroundImage: "url('/hero-bg-2.svg')",
-        backgroundPosition: "bottom",
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
+        backgroundPosition: 'bottom',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
       }}
       variants={containerVariants}
       initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
+      animate={isInView ? 'visible' : 'hidden'}
     >
       <motion.div className="text-center mb-8 max-w-4xl" variants={itemVariants}>
         <motion.h2
@@ -123,12 +123,12 @@ export default function VideoSection({
             className="w-full h-full object-cover"
             controls
             poster="/hero-bg-2.svg"
-            aria-label={choice_video?.alternativeText || "Industry leaders video"}
+            aria-label={choice_video?.alternativeText || 'Industry leaders video'}
           />
         ) : (
           <div
             className="absolute inset-0 flex items-center justify-center bg-cover"
-            style={{ backgroundImage: "url('/videobg.svg')" }}
+            style={{ backgroundImage: "url('/hero-bg-2.svg')" }}
           >
             <div className="text-center text-gray-600">
               <div className="mb-4">No video available</div>
@@ -140,5 +140,5 @@ export default function VideoSection({
         )}
       </div>
     </motion.div>
-  )
+  );
 }

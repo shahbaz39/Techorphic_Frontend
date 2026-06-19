@@ -15,6 +15,10 @@ const nextConfig: NextConfig = {
         port: '1500',
       },
       {
+        protocol: 'http',
+        hostname: '165.22.3.104', // production Strapi droplet (local-provider uploads)
+      },
+      {
         protocol: 'https',
         hostname: 'res.cloudinary.com', // ✅ Add this
       },

@@ -21,7 +21,7 @@ const InitialLoader = () => {
   return (
     <div
       className="fixed top-0 left-0 w-full h-full flex flex-col justify-between items-start z-[1000] overflow-hidden"
-      style={{ backgroundImage: "url('/pre-loader-bg.svg')" }}
+      style={{ backgroundColor: '#00FFBC' }}
     >
       {/* Background overlay */}
       <div className="bg-[#00FFBC]/90 w-full h-full fixed top-0 left-0 z-[900]" />

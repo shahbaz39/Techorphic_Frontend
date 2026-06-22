@@ -156,9 +156,11 @@ const SolutionsCarousel = ({ data }: SolutionsCarouselProps) => {
                       <div className="flex items-center justify-center">
                         <div className="bg-gradient-to-br from-gray-400 to-gray-500 rounded-2xl w-full h-full flex items-center justify-center shadow-2xl transform relative overflow-hidden">
                           {(() => {
-                            // Strapi image first, then the hardcoded per-sector image.
+                            // Hardcoded per-sector image first (the Strapi entries
+                            // only hold a generic "dummy" placeholder), then fall
+                            // back to whatever Strapi has, then the text.
                             const imgSrc =
-                              solution.img?.url || SECTOR_IMAGES[solution.title?.trim()];
+                              SECTOR_IMAGES[solution.title?.trim()] || solution.img?.url;
                             return imgSrc ? (
                               <img
                                 src={imgSrc}

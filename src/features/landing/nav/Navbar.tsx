@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import LETSDISCUSS from '@/icons/LET’SDISCUSS';
+import LETSDISCUSS from '@/icons/LetsDiscuss';
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -17,7 +17,7 @@ const Navbar = () => {
 
   return (
     <nav className="w-full px-4 sm:px-6 lg:px-10 py-4 sm:py-6">
-      <div className="max-w-8xl mx-auto flex items-center justify-between">
+      <div className="max-w-[1800px] mx-auto flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center flex-shrink-0">
           <Link
@@ -106,8 +106,10 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       <div
-        className={`lg:hidden transition-all duration-300 ease-in-out ${
-          isMobileMenuOpen ? 'max-h-96 opacity-100 mt-4 pb-4' : 'max-h-0 opacity-0 overflow-hidden'
+        className={`lg:hidden relative z-50 transition-all duration-300 ease-in-out ${
+          isMobileMenuOpen
+            ? 'max-h-[1000px] opacity-100 mt-4 pb-6'
+            : 'max-h-0 opacity-0 overflow-hidden'
         }`}
       >
         <div className="border-t border-gray-200 pt-4">
@@ -144,7 +146,7 @@ const Navbar = () => {
             <Link
               href="/contact"
               onClick={closeMobileMenu}
-              className="w-full flex items-center justify-center pt-2"
+              className="inline-flex items-center justify-center h-[49px] mt-2 mx-auto flex-shrink-0"
             >
               <LETSDISCUSS />
             </Link>

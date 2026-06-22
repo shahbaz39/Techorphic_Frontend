@@ -127,7 +127,14 @@
   * {
     @apply border-border outline-ring/50;
   }
+  /* Guard against stray horizontal overflow shifting the layout (e.g. the nav
+     CTA being pushed off-screen). `clip` (not `hidden`) avoids creating a
+     scroll container, so it doesn't break GSAP ScrollTrigger pinning. */
+  html {
+    overflow-x: clip;
+  }
   body {
     @apply bg-background text-foreground;
+    max-width: 100%;
   }
 }
